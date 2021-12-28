@@ -1,0 +1,5 @@
+.HeaderContainer {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+}
