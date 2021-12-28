@@ -1,5 +1,14 @@
-.HeaderContainer {
-  display: flex !important;
+.HeaderImageDiv {
+  display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.HeaderImage {
+  padding: 10px 0;
+}
+
+.CardImage {
+  width: 17rem !important;
+  align-self: center;
 }
