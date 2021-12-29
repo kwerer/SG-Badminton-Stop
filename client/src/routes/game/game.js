@@ -2,6 +2,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { Outlet } from "react-router-dom";
 import GameCard from "../../commonComponents/GameCard";
 import styles from "./styles.module.css";
 import axiosInstance from "../../commonComponents/axiosInstance";
@@ -26,13 +27,14 @@ export default function Home() {
       <div className={styles.MainDiv}>
         <div className={styles.AddGameDiv}>
           <AddButton
-            link="addgame"
+            link="new"
             variant="primary"
             content="Add Game!"
           />
         </div>
         <div className={styles.GamesCard}>
-          {gamesData != {} ? (
+          <Outlet />
+          {gamesData !== {} ? (
             gamesData.map((val, key) => {
               return (
                 <div
