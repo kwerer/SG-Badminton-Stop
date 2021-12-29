@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 // import routes
 import games from "./routes/games.js";
+
 dotenv.config();
 
 mongoose

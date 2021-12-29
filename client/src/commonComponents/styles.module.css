@@ -9,6 +9,7 @@
 }
 
 .CardImage {
-  width: 17rem !important;
+  max-height: 150px;
+  width: auto !important;
   align-self: center;
 }

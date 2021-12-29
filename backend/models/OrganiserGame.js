@@ -11,6 +11,8 @@ const organiserGame = new mongoose.Schema({
   fees: { type: String },
   venue: { type: String },
   date: { type: String },
+  orgName: { type: String },
+  players: { type: Object },
 });
 
 const orgGame = mongoose.model(

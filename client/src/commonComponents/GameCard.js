@@ -5,9 +5,19 @@ import {
   ListGroupItem,
 } from "react-bootstrap";
 import Logo from "../Images/Logo.jpg";
+import AddButton from "./AddButton";
 import styles from "./styles.module.css";
 
 function GameCard(props) {
+  const {
+    title,
+    date,
+    players,
+    time,
+    level,
+    format,
+    fees,
+  } = props;
   return (
     <>
       <Card style={{ width: "18rem" }}>
@@ -17,31 +27,34 @@ function GameCard(props) {
           className={styles.CardImage}
         />
         <Card.Body>
-          <Card.Title>Card Title</Card.Title>
+          <Card.Title>Venue: {title}</Card.Title>
           <Card.Text>
-            Some quick example text to build on
-            the card title and make up the bulk of
-            the card's content.
+            Date: {date}
+            <br />
+            Time: {time}
+            <br />
+            Level of play: {level}
+            <br />
+            Format of play: {format}
+            <br />
+            Fees: {fees}
           </Card.Text>
         </Card.Body>
         <ListGroup className="list-group-flush">
-          <ListGroupItem>
-            Cras justo odio
-          </ListGroupItem>
-          <ListGroupItem>
-            Dapibus ac facilisis in
-          </ListGroupItem>
-          <ListGroupItem>
-            Vestibulum at eros
-          </ListGroupItem>
+          {players.map((player, key) => {
+            return (
+              <ListGroupItem>
+                {key + 1}. {player}
+              </ListGroupItem>
+            );
+          })}
         </ListGroup>
         <Card.Body>
-          <Card.Link href="#">
-            Card Link
-          </Card.Link>
-          <Card.Link href="#">
-            Another Link
-          </Card.Link>
+          <AddButton
+            variant="secondary"
+            content="Sign Up"
+            link="signup"
+          />
         </Card.Body>
       </Card>
     </>

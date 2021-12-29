@@ -43,7 +43,7 @@ export default function Header() {
         expand="lg"
       >
         <Container fluid>
-          <Navbar.Brand as={Link} to="">
+          <Navbar.Brand as={Link} to="games">
             <Image
               src={Logo}
               className={styles.HeaderImage}
@@ -62,6 +62,7 @@ export default function Header() {
                     as={Link}
                     to={val.link}
                     disabled={val.disabled}
+                    key={key}
                   >
                     {val.title}
                   </Nav.Link>

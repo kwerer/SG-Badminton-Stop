@@ -24,6 +24,8 @@ router.post("/", async function (req, res) {
     fees: req.body.fees,
     venue: req.body.venue,
     date: req.body.date,
+    orgName: req.body.orgName,
+    players: req.body.players,
   });
 
   try {
