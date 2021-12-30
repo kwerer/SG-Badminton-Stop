@@ -26,3 +26,31 @@
   flex-direction: row;
   justify-content: center;
 }
+
+.AddGameMain {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  /* background-color: rgba(248, 249, 250, 0.4); */
+}
+
+.AddGameForm {
+  min-width: 300px;
+  width: 60%;
+  margin-top: 5px;
+  padding: 20px 25px;
+  border-radius: 5px;
+  background-color: beige;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.TextFieldDiv {
+  background-color: aquamarine;
+}
+
+.FormRowGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

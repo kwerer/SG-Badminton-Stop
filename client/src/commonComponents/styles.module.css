@@ -13,3 +13,9 @@
   width: auto !important;
   align-self: center;
 }
+
+.FormRowGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

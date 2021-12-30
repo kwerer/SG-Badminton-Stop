@@ -41,11 +41,17 @@ export default function Home() {
                   className={
                     styles.GameCardIndivDiv
                   }
+                  key={key}
                 >
                   <GameCard
                     title={val.venue}
                     date={val.date}
                     players={val.players}
+                    time={val.time}
+                    level={val.levelOfPlay}
+                    format={val.formatOfPlay}
+                    fees={val.fees}
+                    key={key}
                   />
                 </div>
               );
