@@ -12,9 +12,12 @@ import {
 } from "react-bootstrap";
 import styles from "./styles.module.css";
 import FormRowSelect from "../../commonComponents/FormRowSelect";
+import SubmitModal from "../../commonComponents/SubmitModal";
 
 function AddGame() {
   // states, function for user form
+  const [onHideModal, setOnHideModal] =
+    useState(false);
   const [validated, setValidated] =
     useState(false);
   const handleSubmit = (event) => {
@@ -23,12 +26,16 @@ function AddGame() {
       event.preventDefault();
       event.stopPropagation();
     }
-
+    // false if form is submitted
+    // true if form is not submitted
     setValidated(true);
 
     // alert/modal for confirmation
+    // see how to get this to work without the page refresh
+    setOnHideModal(true);
     // redirect user back to games page
   };
+
   // states for user data
   const [startDate, setStartDate] = useState(
     new Date()
@@ -118,6 +125,13 @@ function AddGame() {
             <Col xs={2}></Col>
           </Row>
         </Form>
+        <SubmitModal
+          onHide={onHideModal}
+          show={onHideModal}
+          onHide={() => {
+            setOnHideModal(false);
+          }}
+        />
       </div>
     </div>
   );
