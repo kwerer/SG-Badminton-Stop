@@ -9,7 +9,6 @@ function FormRow(props) {
     placeholder,
     negativeFeedback,
   } = props;
-  console.log(placeholder, "here");
   return (
     <Row
       className={`mb-3 ${styles.FormRowGroup}`}

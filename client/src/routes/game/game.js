@@ -16,7 +16,6 @@ export default function Home() {
       .then((res) => {
         setGamesData(res.data);
       });
-    console.log(response);
   }
   useEffect(() => {
     getData();

@@ -3,8 +3,9 @@ import { Row, Form, Col } from "react-bootstrap";
 import styles from "./styles.module.css";
 
 function FormRowSelect(props) {
-  const { label, options } = props;
-  console.log(options);
+  const { label, options, onChangeFunction } =
+    props;
+
   return (
     <Row
       className={`mb-3 ${styles.FormRowGroup}`}
@@ -15,10 +16,15 @@ function FormRowSelect(props) {
         controlId="validationCustom01"
       >
         <Form.Label>{label}</Form.Label>
-        <Form.Select aria-label="Default select example">
+        <Form.Select
+          aria-label="Default select example"
+          onChange={onChangeFunction}
+        >
           {options.map((val, key) => {
             return (
-              <option key={key}>{val}</option>
+              <option key={key} value={val}>
+                {val}
+              </option>
             );
           })}
         </Form.Select>

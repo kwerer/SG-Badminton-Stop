@@ -1,10 +1,15 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-
+import { Link } from "react-router-dom";
 function SubmitModal(props) {
-  const { header, subheader, body, onHide } =
-    props;
+  const {
+    header,
+    subheader,
+    body,
+    onHide,
+    link,
+  } = props;
   return (
     <Modal
       {...props}
@@ -22,7 +27,13 @@ function SubmitModal(props) {
         <p>{body}</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={onHide}>Close</Button>
+        <Button
+          as={Link}
+          to={link}
+          onClick={onHide}
+        >
+          Close
+        </Button>
       </Modal.Footer>
     </Modal>
   );

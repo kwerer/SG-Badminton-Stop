@@ -13,6 +13,7 @@ import {
 import styles from "./styles.module.css";
 import FormRowSelect from "../../commonComponents/FormRowSelect";
 import SubmitModal from "../../commonComponents/SubmitModal";
+import axiosInstance from "../../commonComponents/axiosInstance";
 
 function AddGame() {
   // states, function for user form
@@ -20,20 +21,24 @@ function AddGame() {
     useState(false);
   const [validated, setValidated] =
     useState(false);
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  const [showAlert, setShowAlert] =
+    useState(true);
+  const handleSubmit = (e) => {
+    const form = e.currentTarget;
+
+    e.preventDefault();
+    e.stopPropagation();
+    if (form.checkValidity)
+      if (form.checkValidity() === false) {
+        // if there are wrong fields
+      } else {
+        // alert/modal for confirmation
+        setOnHideModal(true);
+      }
+
     // false if form is submitted
     // true if form is not submitted
     setValidated(true);
-
-    // alert/modal for confirmation
-    // see how to get this to work without the page refresh
-    setOnHideModal(true);
-    // redirect user back to games page
   };
 
   // states for user data
@@ -44,6 +49,20 @@ function AddGame() {
     new Date()
   );
   const [name, setName] = useState("");
+  const [levelOfPlay, setLevelOfPlay] =
+    useState("Beginner");
+  const [formatOfPlay, setFormatOfPlay] =
+    useState("Doubles");
+
+  // axios post request
+  function postGames() {
+    // complete the number of options before you start to create post request
+    // fees and number of players
+    axiosInstance.post(
+      `${process.env.REACT_APP_BASE_URL}/new`,
+      { level: levelOfPlay, format: formatOfPlay }
+    );
+  }
 
   // constant options
   const levelOfPlayList = [
@@ -55,10 +74,13 @@ function AddGame() {
   ];
 
   const formatOfPlayList = [
-    "Singles",
     "Doubles",
+    "Singles",
     "Singles & Doubles",
   ];
+
+  console.log(formatOfPlay, "format");
+  console.log(levelOfPlay, "level");
   return (
     <div className={styles.AddGameMain}>
       <div className={styles.AddGameForm}>
@@ -81,10 +103,16 @@ function AddGame() {
           <FormRowSelect
             label="Level Of Play"
             options={levelOfPlayList}
+            onChangeFunction={(e) => {
+              setLevelOfPlay(e.target.value);
+            }}
           />
           <FormRowSelect
             label="Format Of Play"
             options={formatOfPlayList}
+            onChangeFunction={(e) => {
+              setFormatOfPlay(e.target.value);
+            }}
           />
           <Row
             className={`mb-3 ${styles.FormRowGroup}`}
@@ -131,6 +159,9 @@ function AddGame() {
           onHide={() => {
             setOnHideModal(false);
           }}
+          link="/games"
+          header="Game Successfully Added!"
+          body="Close to see your game!"
         />
       </div>
     </div>
