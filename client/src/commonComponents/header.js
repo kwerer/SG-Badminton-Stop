@@ -69,17 +69,21 @@ export default function Header() {
                 );
               })}
             </Nav>
-            <Form className="d-flex">
-              <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-success">
-                Search
-              </Button>
-            </Form>
+
+            <Button
+              as={Link}
+              to="register"
+              variant="outline-primary"
+            >
+              Register
+            </Button>
+            <Button
+              as={Link}
+              to="login"
+              variant="outline-primary"
+            >
+              Login
+            </Button>
           </Navbar.Collapse>
         </Container>
       </Navbar>

@@ -8,6 +8,7 @@ function FormRow(props) {
     feedback,
     placeholder,
     negativeFeedback,
+    onChangeFunction,
   } = props;
   return (
     <Row
@@ -20,6 +21,7 @@ function FormRow(props) {
       >
         <Form.Label>{label}</Form.Label>
         <Form.Control
+          onChange={onChangeFunction}
           required
           type="text"
           placeholder={

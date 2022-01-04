@@ -1,9 +1,10 @@
 import express from "express";
-import OrganiserGame from "../models/OrganiserGame.js";
+import OrganiserGame from "../models/organiserGame.js";
 const router = express.Router();
 
 // Get all Organiser Games
 router.get("/", async function (req, res) {
+  console.log("gamessdf");
   // find({}) here will get you everything
   OrganiserGame.find({}, function (err, result) {
     if (err) {
@@ -15,7 +16,7 @@ router.get("/", async function (req, res) {
   });
 });
 // Create Organiser Games
-router.post("/", async function (req, res) {
+router.post("/new", async function (req, res) {
   const newOrganiserGame = new OrganiserGame({
     numOfPlayers: req.body.numOfPlayers,
     time: req.body.time,

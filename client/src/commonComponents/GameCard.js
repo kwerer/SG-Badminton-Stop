@@ -40,15 +40,17 @@ function GameCard(props) {
             Fees: {fees}
           </Card.Text>
         </Card.Body>
-        <ListGroup className="list-group-flush">
-          {players.map((player, key) => {
-            return (
-              <ListGroupItem>
-                {key + 1}. {player}
-              </ListGroupItem>
-            );
-          })}
-        </ListGroup>
+        {/* <ListGroup className="list-group-flush">
+          {players !== {}
+            ? players.map((player, key) => {
+                return (
+                  <ListGroupItem>
+                    {key + 1}. {player}
+                  </ListGroupItem>
+                );
+              })
+            : null}
+        </ListGroup> */}
         <Card.Body>
           <AddButton
             variant="secondary"

@@ -13,7 +13,7 @@ import {
 import styles from "./styles.module.css";
 import FormRowSelect from "../../commonComponents/FormRowSelect";
 import SubmitModal from "../../commonComponents/SubmitModal";
-import axiosInstance from "../../commonComponents/axiosInstance";
+import AxiosInstance from "../../commonComponents/AxiosInstance";
 
 function AddGame() {
   // states, function for user form
@@ -53,15 +53,31 @@ function AddGame() {
     useState("Beginner");
   const [formatOfPlay, setFormatOfPlay] =
     useState("Doubles");
+  const [fees, setFees] = useState(0);
+  const [numPlayers, setNumPlayers] = useState(1);
+  const [venue, setVenue] = useState("");
 
   // axios post request
   function postGames() {
-    // complete the number of options before you start to create post request
-    // fees and number of players
-    axiosInstance.post(
-      `${process.env.REACT_APP_BASE_URL}/new`,
-      { level: levelOfPlay, format: formatOfPlay }
+    const addedGame = {
+      numOfPlayers: numPlayers,
+      time: `${startDate.getHours()}:${startDate.getMinutes()} -
+        ${endDate.getHours()}:${endDate.getMinutes()}`,
+      levelOfPlay: levelOfPlay,
+      formatOfPlay: formatOfPlay,
+      fees: fees,
+      venue: venue,
+      date: `${startDate.getDate()}-${
+        startDate.getMonth() + 1
+      }-${startDate.getFullYear()}`,
+      orgName: "tbc",
+      players: ["test1", "test2", "test3"],
+    };
+    AxiosInstance.post(
+      `${process.env.REACT_APP_BASE_URL}/games/new`,
+      addedGame
     );
+    console.log(addedGame, "addedGame");
   }
 
   // constant options
@@ -78,9 +94,9 @@ function AddGame() {
     "Singles",
     "Singles & Doubles",
   ];
+  // change when can more than 5 people
+  const numPlayersList = [1, 2, 3, 4, 5];
 
-  console.log(formatOfPlay, "format");
-  console.log(levelOfPlay, "level");
   return (
     <div className={styles.AddGameMain}>
       <div className={styles.AddGameForm}>
@@ -94,11 +110,24 @@ function AddGame() {
             feedback="Looks Good!"
             placeholder="e.g. Pasir Ris Sports Hall"
             negativeFeedback="Please provide a valid venue."
+            onChangeFunction={(e) => {
+              setVenue(e.target.value);
+            }}
           />
           <FormRow
             label="Fees"
             feedback="Looks Good!"
             negativeFeedback="Please provide a valid fee."
+            onChangeFunction={(e) => {
+              setFees(e.target.value);
+            }}
+          />
+          <FormRowSelect
+            label="Number of players"
+            options={numPlayersList}
+            onChangeFunction={(e) => {
+              setNumPlayers(e.target.value);
+            }}
           />
           <FormRowSelect
             label="Level Of Play"
@@ -120,32 +149,47 @@ function AddGame() {
             <Form.Group
               as={Col}
               md="8"
-              controlId="validationCustom01"
+              className={styles.FormTime}
             >
               <Form.Label>Start Time</Form.Label>
-              <DatePicker
-                selected={startDate}
-                showTimeSelect
-                onChange={(date) =>
-                  setStartDate(date)
-                }
-                dateFormat="Pp"
-              />
               <Form.Label>End Time</Form.Label>
-              <DatePicker
-                selected={endDate}
-                showTimeSelect
-                onChange={(date) =>
-                  setEndDate(date)
-                }
-                dateFormat="Pp"
-              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="8"
+              controlId="validationCustom01"
+              className={styles.FormTime}
+            >
+              <div className={styles.FormTimeDiv}>
+                <DatePicker
+                  selected={startDate}
+                  showTimeSelect
+                  onChange={(date) =>
+                    setStartDate(date)
+                  }
+                  dateFormat="Pp"
+                />
+              </div>
+
+              <div className={styles.FormTimeDiv}>
+                <DatePicker
+                  selected={endDate}
+                  showTimeSelect
+                  onChange={(date) =>
+                    setEndDate(date)
+                  }
+                  dateFormat="Pp"
+                />
+              </div>
             </Form.Group>
           </Row>
           <Row>
             <Col xs={2}></Col>
             <Col>
-              <Button type="submit">
+              <Button
+                type="submit"
+                onClick={postGames}
+              >
                 Submit
               </Button>
             </Col>

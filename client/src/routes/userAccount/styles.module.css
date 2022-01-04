@@ -1,0 +1,19 @@
+.RegisterLoginMain {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.RegisterLoginForm {
+  min-width: 300px;
+  width: 60%;
+  margin-top: 5px;
+  padding: 20px 25px;
+  border-radius: 5px;
+  background-color: beige;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.RegisterLoginButton {
+  padding: 5% 0 0 0;
+}

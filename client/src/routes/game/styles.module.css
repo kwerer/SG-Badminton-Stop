@@ -54,3 +54,23 @@
   flex-direction: row;
   justify-content: center;
 }
+
+.FormTime {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.FormTimeLabels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 80% !important;
+  height: 10px;
+}
+
+.FormTimeDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

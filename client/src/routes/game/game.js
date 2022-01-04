@@ -5,17 +5,17 @@ import React, {
 import { Outlet } from "react-router-dom";
 import GameCard from "../../commonComponents/GameCard";
 import styles from "./styles.module.css";
-import axiosInstance from "../../commonComponents/axiosInstance";
+import AxiosInstance from "../../commonComponents/AxiosInstance";
 import AddButton from "../../commonComponents/AddButton";
 
 export default function Home() {
   const [gamesData, setGamesData] = useState([]);
   async function getData() {
-    const response = await axiosInstance
-      .get("/games")
-      .then((res) => {
-        setGamesData(res.data);
-      });
+    const response = await AxiosInstance.get(
+      "/games"
+    ).then((res) => {
+      setGamesData(res.data);
+    });
   }
   useEffect(() => {
     getData();

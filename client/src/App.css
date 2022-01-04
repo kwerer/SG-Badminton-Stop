@@ -1,1 +1,7 @@
+/* make form time centered */
 
+#datePickerForm > .react-datepicker-wrapper {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+}
