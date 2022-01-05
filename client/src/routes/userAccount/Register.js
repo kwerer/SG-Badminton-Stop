@@ -1,17 +1,10 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useState } from "react";
 import AxiosInstance from "../../commonComponents/AxiosInstance.js";
 import { Button, Form } from "react-bootstrap";
 import styles from "./styles.module.css";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
-  async function getData() {
-    const response = await AxiosInstance.get(
-      "login"
-    );
-  }
   // function to post game
   function addUser() {
     const addedUser = {
@@ -30,35 +23,31 @@ function Register() {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const [validated, setValidated] =
-    useState(false);
-
+  const [validated, setValidated] = useState(false);
+  // get the url from where the user was from
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     // need to check backend for
     // 1. username is taken
     // 2. email is taken
-
+    event.preventDefault();
+    event.stopPropagation();
     // need to check user password is the same
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    } else {
+      addUser();
+      // navigate to /games/new when user is registered
+      // navigate("/");
     }
 
     setValidated(true);
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
   return (
     <div className={styles.RegisterLoginMain}>
       <div className={styles.RegisterLoginForm}>
-        <Form
-          noValidate
-          validated={validated}
-          onSubmit={handleSubmit}
-        >
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group controlId="validationCustom01">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -71,8 +60,7 @@ function Register() {
             />
 
             <Form.Control.Feedback type="invalid">
-              Username is taken, please enter
-              another username
+              Username is taken, please enter another username
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="validationCustom02">
@@ -87,8 +75,7 @@ function Register() {
             />
 
             <Form.Control.Feedback type="invalid">
-              Email already has an account that is
-              signed up.
+              Email already has an account that is signed up.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="validationCustom02">
@@ -103,9 +90,7 @@ function Register() {
             />
           </Form.Group>
           <Form.Group controlId="validationCustom02">
-            <Form.Label>
-              Re-enter Password
-            </Form.Label>
+            <Form.Label>Re-enter Password</Form.Label>
             <Form.Control
               required
               type="text"
@@ -116,16 +101,11 @@ function Register() {
             />
 
             <Form.Control.Feedback type="invalid">
-              Please ensure that the password is
-              the same.
+              Please ensure that the password is the same.
             </Form.Control.Feedback>
           </Form.Group>
-          <div
-            className={styles.RegisterLoginButton}
-          >
-            <Button type="submit">
-              Register!
-            </Button>
+          <div className={styles.RegisterLoginButton}>
+            <Button type="submit">Register!</Button>
           </div>
         </Form>
       </div>

@@ -10,6 +10,7 @@ router.post("/", async function (req, res) {
   userAccount.register(
     {
       username: req.body.username,
+      email: req.body.email,
     },
     req.body.password,
     function (err, user) {
@@ -17,7 +18,7 @@ router.post("/", async function (req, res) {
         res.redirect("/register");
       } else {
         passport.authenticate("local")(req, res, function () {
-          res.redirect("/games/new");
+          res.send("/games/newwqerqwer");
         });
       }
     }
