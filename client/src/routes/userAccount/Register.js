@@ -6,23 +6,32 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   // function to post game
-  function addUser() {
+  async function addUser() {
     const addedUser = {
       username: userName,
       email: email,
       password: password1,
     };
-    AxiosInstance.post(
+
+    const promise = AxiosInstance.post(
       `${process.env.REACT_APP_BASE_URL}/register`,
       addedUser
     );
+
+    const dataPromise = await promise.then((res) => res.data.userCreated);
+    if (dataPromise) {
+      navigate("/games");
+    } else {
+      alert("Username/Email is taken");
+      navigate("/register");
+    }
   }
+
   // form component
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
-
   const [validated, setValidated] = useState(false);
   // get the url from where the user was from
   const navigate = useNavigate();
@@ -36,7 +45,12 @@ function Register() {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
     } else {
-      addUser();
+      try {
+        addUser();
+      } catch (e) {
+        console.log(e);
+      }
+
       // navigate to /games/new when user is registered
       // navigate("/");
     }

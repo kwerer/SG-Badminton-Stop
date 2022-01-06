@@ -5,16 +5,26 @@ import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  function loginUser() {
+  async function loginUser() {
     const addedUser = {
       username: userName,
       email: email,
       password: password1,
     };
-    AxiosInstance.post(
+    const promise = AxiosInstance.post(
       `${process.env.REACT_APP_BASE_URL}/login`,
       addedUser
     );
+
+    const dataPromise = await promise.then((res) => res.data.userAuth);
+    console.log(dataPromise);
+
+    if (dataPromise) {
+      navigate("/games");
+    } else {
+      alert("Wrong login credentials");
+      navigate("/login");
+    }
   }
   // form component
   const [userName, setUserName] = useState("");
@@ -36,8 +46,6 @@ function Login() {
     if (form.checkValidity() === false) {
     } else {
       loginUser();
-      // navigate to /games/new when user is registered
-      navigate("/games");
     }
 
     setValidated(true);
