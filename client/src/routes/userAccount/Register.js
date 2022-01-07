@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { LoginContext } from "../../commonComponents/Context.js";
 import AxiosInstance from "../../commonComponents/AxiosInstance.js";
 import { Button, Form } from "react-bootstrap";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  // function to post game
+  // Set object to be true and username
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  // function to register and authenticate user
   async function addUser() {
     const addedUser = {
       username: userName,
@@ -18,12 +21,18 @@ function Register() {
       addedUser
     );
 
-    const dataPromise = await promise.then((res) => res.data.userCreated);
+    const dataPromise = await promise.then((res) => {
+      sessionStorage.setItem("login", true);
+      sessionStorage.setItem("username", res.data.username);
+      return res.data.username;
+    });
+
     if (dataPromise) {
       navigate("/games");
+      setLoggedIn({ login: true, username: dataPromise });
     } else {
       alert("Username/Email is taken");
-      navigate("/register");
+      window.location.reload();
     }
   }
 

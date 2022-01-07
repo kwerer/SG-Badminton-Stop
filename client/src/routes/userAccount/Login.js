@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { LoginContext } from "../../commonComponents/Context.js";
 import AxiosInstance from "../../commonComponents/AxiosInstance.js";
 import { Button, Form } from "react-bootstrap";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  // Set object to be true and username
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  // get the url from where the user was from
+  const navigate = useNavigate();
+  // function to authenticate existing user
   async function loginUser() {
     const addedUser = {
       username: userName,
@@ -16,14 +22,18 @@ function Login() {
       addedUser
     );
 
-    const dataPromise = await promise.then((res) => res.data.userAuth);
-    console.log(dataPromise);
+    const dataPromise = await promise.then((res) => {
+      sessionStorage.setItem("login", true);
+      sessionStorage.setItem("username", res.username);
+      return res.data.username;
+    });
 
     if (dataPromise) {
       navigate("/games");
+      setLoggedIn({ login: true, username: dataPromise });
     } else {
       alert("Wrong login credentials");
-      navigate("/login");
+      window.location.reload();
     }
   }
   // form component
@@ -33,8 +43,7 @@ function Login() {
   const [password2, setPassword2] = useState("");
 
   const [validated, setValidated] = useState(false);
-  // get the url from where the user was from
-  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     // need to check backend for
     // 1. username is taken
@@ -66,7 +75,7 @@ function Login() {
             />
 
             <Form.Control.Feedback type="invalid">
-              Username is taken, please enter another username
+              Username cannot be empty
             </Form.Control.Feedback>
           </Form.Group>
 

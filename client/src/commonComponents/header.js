@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { LoginContext } from "./Context";
+import { FiUser } from "react-icons/fi";
 import {
   Navbar,
   Nav,
@@ -10,9 +12,22 @@ import {
 } from "react-bootstrap";
 import styles from "./styles.module.css";
 import Logo from "../Images/Rectangle-logo-without-bg.png";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export default function Header() {
+  // user context for login check
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  // to bring user back to main page using navigate
+  const navigate = useNavigate();
+  // function to clear login details
+  function handleLogOut() {
+    sessionStorage.clear();
+    setLoggedIn({ loggedIn: false, username: "" });
+    navigate("/games");
+    // create modal here to log out user
+  }
+
   const NavLinks = [
     {
       title: "Look for games",
@@ -37,17 +52,10 @@ export default function Header() {
   ];
   return (
     <>
-      <Navbar
-        bg="light"
-        variant="light"
-        expand="lg"
-      >
+      <Navbar bg="light" variant="light" expand="lg">
         <Container fluid>
           <Navbar.Brand as={Link} to="games">
-            <Image
-              src={Logo}
-              className={styles.HeaderImage}
-            />
+            <Image src={Logo} className={styles.HeaderImage} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -70,20 +78,26 @@ export default function Header() {
               })}
             </Nav>
 
-            <Button
-              as={Link}
-              to="register"
-              variant="outline-primary"
-            >
-              Register
-            </Button>
-            <Button
-              as={Link}
-              to="login"
-              variant="outline-primary"
-            >
-              Login
-            </Button>
+            {loggedIn.login ? (
+              <>
+                <div>
+                  Hello, {loggedIn.username}!
+                  <FiUser />
+                  <Button variant="outline-primary" onClick={handleLogOut}>
+                    Log Out
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Button as={Link} to="register" variant="outline-primary">
+                  Register
+                </Button>
+                <Button as={Link} to="login" variant="outline-primary">
+                  Login
+                </Button>
+              </>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

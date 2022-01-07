@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/", async function (req, res) {
   console.log("register post");
   // register method comes from passport-local-mongoose package
+
   userAccount.register(
     {
       username: req.body.username,
@@ -15,10 +16,16 @@ router.post("/", async function (req, res) {
     req.body.password,
     function (err, user) {
       if (err) {
-        res.redirect("/register");
+        // function here checks for created unique username
+        console.log(err, "error during register");
+        console.log("user not created");
+        res.send({ userCreated: false });
       } else {
+        // auth after register
+
         passport.authenticate("local")(req, res, function () {
-          res.send("/games/newwqerqwer");
+          console.log("user created");
+          res.json(user);
         });
       }
     }

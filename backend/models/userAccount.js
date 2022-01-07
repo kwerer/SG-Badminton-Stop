@@ -5,11 +5,12 @@ const users = new mongoose.Schema({
   username: { type: String },
   email: {
     type: String,
+    unique: true,
   },
   password: { type: String },
 });
 
-users.plugin(passportLocalMongoose);
+users.plugin(passportLocalMongoose, {});
 
 const userAccount = mongoose.model("userAccount", users);
 
