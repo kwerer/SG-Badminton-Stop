@@ -27,7 +27,7 @@ app.use(
 );
 // initialise the passport package
 app.use(passport.initialize());
-// use passport to deal with the sessions
+// use passport to deal with the sessionS
 app.use(passport.session());
 
 // might need to shift this down if there are errors
@@ -35,9 +35,7 @@ mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
   })
-  .then(() =>
-    console.log("DB Connection Successfull")
-  )
+  .then(() => console.log("DB Connection Successfull"))
   .catch((err) => {
     console.error(err);
   });
@@ -46,12 +44,8 @@ mongoose
 // userAccount.plugin(passportLocalMongoose);
 
 passport.use(userAccount.createStrategy());
-passport.serializeUser(
-  userAccount.serializeUser()
-);
-passport.deserializeUser(
-  userAccount.deserializeUser()
-);
+passport.serializeUser(userAccount.serializeUser());
+passport.deserializeUser(userAccount.deserializeUser());
 // middlewares
 // called for everything to allow external api to reach our server
 app.use(cors());

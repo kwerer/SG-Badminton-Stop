@@ -14,21 +14,27 @@ import { LoginContext } from "./commonComponents/Context";
 function App() {
   const [loggedIn, setLoggedIn] = useState({ login: false, username: "" });
   useEffect(() => {
-    setLoggedIn({
-      login: sessionStorage.getItem("login"),
-      username: sessionStorage.getItem("username"),
-    });
+    if (
+      sessionStorage.getItem("login") &&
+      sessionStorage.getItem("username")
+    ) {
+      setLoggedIn({
+        login: sessionStorage.getItem("login"),
+        username: sessionStorage.getItem("username"),
+      });
+    }
   }, []);
-  console.log(sessionStorage, "session storage");
-  console.log(loggedIn, "logged in");
+  console.log(loggedIn, "loggedin");
+  console.log(sessionStorage);
+
   return (
     <LoginContext.Provider value={{ loggedIn, setLoggedIn }}>
       <Header />
       <Routes>
-        <Route path="games" element={<Game />} />
         <Route path="games/new" element={<AddGame />} />
+        <Route path="games" element={<Game />} />
         <Route path="register" element={<Register />} />
-        <Route path="Login" element={<Login />} />
+        <Route path="login" element={<Login />} />
         {/* <Route path="/" element={<App />} />
       <Route path="/" element={<App />} />
       <Route path="/" element={<App />} /> */}

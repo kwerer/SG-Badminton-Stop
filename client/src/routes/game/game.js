@@ -1,7 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import GameCard from "../../commonComponents/GameCard";
 import styles from "./styles.module.css";
@@ -11,9 +8,7 @@ import AddButton from "../../commonComponents/AddButton";
 export default function Home() {
   const [gamesData, setGamesData] = useState([]);
   async function getData() {
-    const response = await AxiosInstance.get(
-      "/games"
-    ).then((res) => {
+    const response = await AxiosInstance.get("/games").then((res) => {
       setGamesData(res.data);
     });
   }
@@ -25,23 +20,14 @@ export default function Home() {
     <>
       <div className={styles.MainDiv}>
         <div className={styles.AddGameDiv}>
-          <AddButton
-            link="new"
-            variant="primary"
-            content="Add Game!"
-          />
+          <AddButton link="new" variant="primary" content="Add Game!" />
         </div>
         <div className={styles.GamesCard}>
           <Outlet />
           {gamesData !== {} ? (
-            gamesData.map((val, key) => {
+            gamesData.reverse().map((val, key) => {
               return (
-                <div
-                  className={
-                    styles.GameCardIndivDiv
-                  }
-                  key={key}
-                >
+                <div className={styles.GameCardIndivDiv} key={key}>
                   <GameCard
                     title={val.venue}
                     date={val.date}
@@ -50,6 +36,7 @@ export default function Home() {
                     level={val.levelOfPlay}
                     format={val.formatOfPlay}
                     fees={val.fees}
+                    id={val._id}
                     key={key}
                   />
                 </div>

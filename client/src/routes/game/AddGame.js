@@ -4,12 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // import bootstrap form from common
 import FormRow from "../../commonComponents/FormRow";
-import {
-  Row,
-  Form,
-  Col,
-  Button,
-} from "react-bootstrap";
+import { Row, Form, Col, Button } from "react-bootstrap";
 import styles from "./styles.module.css";
 import FormRowSelect from "../../commonComponents/FormRowSelect";
 import SubmitModal from "../../commonComponents/SubmitModal";
@@ -17,12 +12,9 @@ import AxiosInstance from "../../commonComponents/AxiosInstance";
 
 function AddGame() {
   // states, function for user form
-  const [onHideModal, setOnHideModal] =
-    useState(false);
-  const [validated, setValidated] =
-    useState(false);
-  const [showAlert, setShowAlert] =
-    useState(true);
+  const [onHideModal, setOnHideModal] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
   const handleSubmit = (e) => {
     const form = e.currentTarget;
 
@@ -42,17 +34,11 @@ function AddGame() {
   };
 
   // states for user data
-  const [startDate, setStartDate] = useState(
-    new Date()
-  );
-  const [endDate, setEndDate] = useState(
-    new Date()
-  );
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [name, setName] = useState("");
-  const [levelOfPlay, setLevelOfPlay] =
-    useState("Beginner");
-  const [formatOfPlay, setFormatOfPlay] =
-    useState("Doubles");
+  const [levelOfPlay, setLevelOfPlay] = useState("Beginner");
+  const [formatOfPlay, setFormatOfPlay] = useState("Doubles");
   const [fees, setFees] = useState(0);
   const [numPlayers, setNumPlayers] = useState(1);
   const [venue, setVenue] = useState("");
@@ -61,8 +47,8 @@ function AddGame() {
   function postGames() {
     const addedGame = {
       numOfPlayers: numPlayers,
-      time: `${startDate.getHours()}:${startDate.getMinutes()} -
-        ${endDate.getHours()}:${endDate.getMinutes()}`,
+      time: `${startDate.getHours()}${startDate.getMinutes()} -
+        ${endDate.getHours()}${endDate.getMinutes()}`,
       levelOfPlay: levelOfPlay,
       formatOfPlay: formatOfPlay,
       fees: fees,
@@ -89,22 +75,14 @@ function AddGame() {
     "Advanced",
   ];
 
-  const formatOfPlayList = [
-    "Doubles",
-    "Singles",
-    "Singles & Doubles",
-  ];
+  const formatOfPlayList = ["Doubles", "Singles", "Singles & Doubles"];
   // change when can more than 5 people
   const numPlayersList = [1, 2, 3, 4, 5];
 
   return (
     <div className={styles.AddGameMain}>
       <div className={styles.AddGameForm}>
-        <Form
-          noValidate
-          validated={validated}
-          onSubmit={handleSubmit}
-        >
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <FormRow
             label="Venue"
             feedback="Looks Good!"
@@ -143,14 +121,8 @@ function AddGame() {
               setFormatOfPlay(e.target.value);
             }}
           />
-          <Row
-            className={`mb-3 ${styles.FormRowGroup}`}
-          >
-            <Form.Group
-              as={Col}
-              md="8"
-              className={styles.FormTime}
-            >
+          <Row className={`mb-3 ${styles.FormRowGroup}`}>
+            <Form.Group as={Col} md="8" className={styles.FormTime}>
               <Form.Label>Start Time</Form.Label>
               <Form.Label>End Time</Form.Label>
             </Form.Group>
@@ -164,9 +136,7 @@ function AddGame() {
                 <DatePicker
                   selected={startDate}
                   showTimeSelect
-                  onChange={(date) =>
-                    setStartDate(date)
-                  }
+                  onChange={(date) => setStartDate(date)}
                   dateFormat="Pp"
                 />
               </div>
@@ -175,9 +145,7 @@ function AddGame() {
                 <DatePicker
                   selected={endDate}
                   showTimeSelect
-                  onChange={(date) =>
-                    setEndDate(date)
-                  }
+                  onChange={(date) => setEndDate(date)}
                   dateFormat="Pp"
                 />
               </div>
@@ -186,10 +154,7 @@ function AddGame() {
           <Row>
             <Col xs={2}></Col>
             <Col>
-              <Button
-                type="submit"
-                onClick={postGames}
-              >
+              <Button type="submit" onClick={postGames}>
                 Submit
               </Button>
             </Col>

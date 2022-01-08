@@ -24,7 +24,7 @@ function Login() {
 
     const dataPromise = await promise.then((res) => {
       sessionStorage.setItem("login", true);
-      sessionStorage.setItem("username", res.username);
+      sessionStorage.setItem("username", res.data.username);
       return res.data.username;
     });
 

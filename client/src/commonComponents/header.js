@@ -6,9 +6,8 @@ import {
   Nav,
   Image,
   Container,
-  Form,
-  FormControl,
   Button,
+  Dropdown,
 } from "react-bootstrap";
 import styles from "./styles.module.css";
 import Logo from "../Images/Rectangle-logo-without-bg.png";
@@ -81,11 +80,24 @@ export default function Header() {
             {loggedIn.login ? (
               <>
                 <div>
-                  Hello, {loggedIn.username}!
-                  <FiUser />
-                  <Button variant="outline-primary" onClick={handleLogOut}>
-                    Log Out
-                  </Button>
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      variant="outline-primary"
+                      id="dropdown-basic"
+                    >
+                      Hello, {loggedIn.username}
+                      <FiUser />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item as={Link} to="mygames">
+                        My Games
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={handleLogOut}>
+                        Log Out
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               </>
             ) : (
