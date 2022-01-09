@@ -12,6 +12,7 @@ import passportLocalMongoose from "passport-local-mongoose";
 import games from "./routes/games.js";
 import login from "./routes/login.js";
 import register from "./routes/register.js";
+import mygames from "./routes/mygames.js";
 // import userAccount Schema
 import userAccount from "./models/userAccount.js";
 
@@ -57,6 +58,7 @@ app.use(express.json());
 app.use("/games", games);
 app.use("/login", login);
 app.use("/register", register);
+app.use("/mygames", mygames);
 
 app.listen(3001, () => {
   console.log("server started on port 3001");

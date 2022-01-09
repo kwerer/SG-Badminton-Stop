@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+// import Context object
+import { LoginContext } from "../../commonComponents/Context";
 // import date picker and css
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -11,6 +13,9 @@ import SubmitModal from "../../commonComponents/SubmitModal";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
 
 function AddGame() {
+  // Context object to get the username of the logged in person who registered game
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+
   // states, function for user form
   const [onHideModal, setOnHideModal] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -45,6 +50,7 @@ function AddGame() {
 
   // axios post request
   function postGames() {
+    // object add game to games collection
     const addedGame = {
       numOfPlayers: numPlayers,
       time: `${startDate.getHours()}${startDate.getMinutes()} -
@@ -56,14 +62,16 @@ function AddGame() {
       date: `${startDate.getDate()}-${
         startDate.getMonth() + 1
       }-${startDate.getFullYear()}`,
-      orgName: "tbc",
-      players: ["test1", "test2", "test3"],
+      // gets the username of the user that is currently loggedIn
+      orgName: loggedIn.username,
+      players: [],
     };
+    // post games to
     AxiosInstance.post(
       `${process.env.REACT_APP_BASE_URL}/games/new`,
       addedGame
     );
-    console.log(addedGame, "addedGame");
+    // console.log(addedGame, "addedGame");
   }
 
   // constant options

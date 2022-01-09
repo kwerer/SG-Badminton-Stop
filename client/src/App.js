@@ -10,6 +10,7 @@ import Register from "./routes/userAccount/Register";
 import "./App.css";
 
 import { LoginContext } from "./commonComponents/Context";
+import UserGames from "./routes/game/MyGames";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState({ login: false, username: "" });
@@ -24,8 +25,6 @@ function App() {
       });
     }
   }, []);
-  console.log(loggedIn, "loggedin");
-  console.log(sessionStorage);
 
   return (
     <LoginContext.Provider value={{ loggedIn, setLoggedIn }}>
@@ -35,6 +34,7 @@ function App() {
         <Route path="games" element={<Game />} />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="mygames/:username" element={<UserGames />} />
         {/* <Route path="/" element={<App />} />
       <Route path="/" element={<App />} />
       <Route path="/" element={<App />} /> */}

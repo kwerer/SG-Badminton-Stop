@@ -6,7 +6,23 @@ import styles from "./styles.module.css";
 import LoginModal from "../commonComponents/LoginModal.js";
 
 function GameCard(props) {
-  const { title, date, players, time, level, format, fees, id } = props;
+  const {
+    title,
+    date,
+    players,
+    time,
+    level,
+    format,
+    fees,
+    name,
+    id,
+    buttonFunction,
+    buttonVariant,
+    buttonText,
+    organiserButtonFunction,
+    organiserButtonVariant,
+    organiserButtonText,
+  } = props;
   // Use context object to check if user is logged in or not
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
   // modal show state
@@ -15,16 +31,6 @@ function GameCard(props) {
     setShowModal(false);
   }
 
-  //when user click sign up for games
-  function handleSignUp() {
-    // if user is logged in, open modal
-    if (loggedIn.login) {
-      // add user into games player list
-    } // else if user is no logged in
-    else {
-      setShowModal(true);
-    }
-  }
   // return names of players as an array
   const playerNames = Object.values(players);
 
@@ -45,25 +51,46 @@ function GameCard(props) {
             Format of play: {format}
             <br />
             Fees: {fees}
+            <br />
+            Organiser: {name}
           </Card.Text>
         </Card.Body>
-        {/* list of players - to be updated */}
-        <ListGroup className="list-group-flush">
-          {players !== {}
-            ? playerNames.map((player, key) => {
-                return (
-                  <ListGroupItem key={key}>
-                    {key + 1}. {player}
-                  </ListGroupItem>
-                );
-              })
-            : null}
-        </ListGroup>
-        <Card.Body>
-          <Button onClick={handleSignUp} variant="secondary">
-            Sign Up
-          </Button>
-        </Card.Body>
+
+        {players.length !== 0 ? (
+          <ListGroup className="list-group-flush">
+            {players !== {}
+              ? playerNames.map((player, key) => {
+                  return (
+                    <ListGroupItem key={key}>
+                      {key + 1}. {player}
+                    </ListGroupItem>
+                  );
+                })
+              : null}
+          </ListGroup>
+        ) : null}
+        {loggedIn.username !== name ? (
+          <Card.Body>
+            <Button
+              value={id}
+              onClick={(e) => {
+                buttonFunction(e);
+              }}
+              variant={buttonVariant}
+            >
+              {buttonText}
+            </Button>
+          </Card.Body>
+        ) : (
+          <Card.Body>
+            <Button
+              onClick={organiserButtonFunction}
+              variant={organiserButtonVariant}
+            >
+              {organiserButtonText}
+            </Button>
+          </Card.Body>
+        )}
       </Card>
     </>
   );

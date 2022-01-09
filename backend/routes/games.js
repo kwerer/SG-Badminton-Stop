@@ -1,12 +1,13 @@
 import express from "express";
-import OrganiserGame from "../models/organiserGame.js";
+import organiserGame from "../models/organiserGame.js";
+
 const router = express.Router();
 
 // Get all Organiser Games
 router.get("/", async function (req, res) {
   console.log("gamessdf");
   // find({}) here will get you everything
-  OrganiserGame.find({}, function (err, result) {
+  organiserGame.find({}, function (err, result) {
     if (err) {
       res.status(500).json(err);
     } else {
@@ -15,9 +16,23 @@ router.get("/", async function (req, res) {
     }
   });
 });
+// Receive registers from users
+router.post("/", async function (req, res) {
+  console.log("games post request");
+  console.log(req.body.gameID, "req.body");
+  console.log(req.body.username, "req.body");
+  // const idd = ObjectId(req.body.gameID);
+  const user = req.body.username;
+
+  organiserGame.updateOne(
+    { _id: { $oid: req.body.gameID } },
+    { $push: { players: user } }
+  );
+});
 // Create Organiser Games
 router.post("/new", async function (req, res) {
-  const newOrganiserGame = new OrganiserGame({
+  // post games to organiser collections
+  const newOrganiserGame = new organiserGame({
     numOfPlayers: req.body.numOfPlayers,
     time: req.body.time,
     levelOfPlay: req.body.levelOfPlay,
@@ -30,8 +45,7 @@ router.post("/new", async function (req, res) {
   });
 
   try {
-    const savedGame =
-      await newOrganiserGame.save();
+    const savedGame = await newOrganiserGame.save();
     res.status(201).json(savedGame);
   } catch (e) {
     res.status(500).json(e);

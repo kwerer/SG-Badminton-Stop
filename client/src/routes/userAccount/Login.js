@@ -33,7 +33,6 @@ function Login() {
       setLoggedIn({ login: true, username: dataPromise });
     } else {
       alert("Wrong login credentials");
-      window.location.reload();
     }
   }
   // form component

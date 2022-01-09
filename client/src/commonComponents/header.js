@@ -90,7 +90,10 @@ export default function Header() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      <Dropdown.Item as={Link} to="mygames">
+                      <Dropdown.Item
+                        as={Link}
+                        to={`mygames/${loggedIn.username}`}
+                      >
                         My Games
                       </Dropdown.Item>
                       <Dropdown.Item onClick={handleLogOut}>
