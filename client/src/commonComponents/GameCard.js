@@ -1,5 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Card, Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  ListGroup,
+  ListGroupItem,
+  Modal,
+} from "react-bootstrap";
 import { LoginContext } from "./Context.js";
 import Logo from "../Images/Logo.jpg";
 import styles from "./styles.module.css";
@@ -19,9 +25,16 @@ function GameCard(props) {
     buttonFunction,
     buttonVariant,
     buttonText,
+    registeredButtonText,
+    registeredVariant,
     organiserButtonFunction,
     organiserButtonVariant,
     organiserButtonText,
+    registerModalOpen,
+    handleOpenRegisterModal,
+    handleCloseRegisterModal,
+    MyGame,
+    handlePlayerDetails,
   } = props;
   // Use context object to check if user is logged in or not
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
@@ -34,6 +47,10 @@ function GameCard(props) {
   // return names of players as an array
   const playerNames = Object.values(players);
 
+  console.log(loggedIn.username, "logged in user");
+  console.log(players, "list of players");
+  console.log([1, 2, 3], "incluide");
+  console.log(players.includes(loggedIn.username), "testing");
   return (
     <>
       <LoginModal show={showModal} handleClose={handleClose} />
@@ -55,32 +72,82 @@ function GameCard(props) {
             Organiser: {name}
           </Card.Text>
         </Card.Body>
-
+        {/*  logic to list players  */}
         {players.length !== 0 ? (
           <ListGroup className="list-group-flush">
             {players !== {}
               ? playerNames.map((player, key) => {
+                  console.log(MyGame, ",ygame");
                   return (
-                    <ListGroupItem key={key}>
-                      {key + 1}. {player}
+                    <ListGroupItem
+                      key={key}
+                      className={styles.ListGroupItem}
+                    >
+                      <span className={MyGame ? styles.ListPlayer : null}>
+                        {key + 1}. {player}
+                      </span>
+                      {MyGame ? (
+                        <span className={styles.ListPlayerButton}>
+                          <Button
+                            variant="info"
+                            onClick={handlePlayerDetails}
+                          >
+                            Details
+                          </Button>
+                        </span>
+                      ) : null}
                     </ListGroupItem>
                   );
                 })
               : null}
           </ListGroup>
         ) : null}
+        {/* logic for organiser button */}
         {loggedIn.username !== name ? (
-          <Card.Body>
-            <Button
-              value={id}
-              onClick={(e) => {
-                buttonFunction(e);
-              }}
-              variant={buttonVariant}
+          <>
+            <Modal
+              show={registerModalOpen}
+              onHide={handleCloseRegisterModal}
             >
-              {buttonText}
-            </Button>
-          </Card.Body>
+              <Modal.Header closeButton>
+                <Modal.Title>Sign Up for game!</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                By signing up you will give your phone number to the
+                organiser to allow them to contact you!
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={handleCloseRegisterModal}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant="primary"
+                  value={id}
+                  onClick={(e) => buttonFunction(e)}
+                >
+                  Sign Up!
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            <Card.Body>
+              {!players.includes(loggedIn.username) ? (
+                <Button
+                  value={id}
+                  onClick={handleOpenRegisterModal}
+                  variant={buttonVariant}
+                >
+                  {buttonText}
+                </Button>
+              ) : (
+                <Button disabled variant={registeredVariant}>
+                  {registeredButtonText}
+                </Button>
+              )}
+            </Card.Body>
+          </>
         ) : (
           <Card.Body>
             <Button

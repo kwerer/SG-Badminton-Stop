@@ -14,13 +14,15 @@ function MyGames() {
   // all games stored as objects in a list
   const [gamesData, setGamesData] = useState([]);
 
+  // store all players registered for game here
+  const [indivPlayer, setIndivPlayer] = useState({});
+
   let param = useParams();
 
   async function getData() {
     const response = await AxiosInstance.get(
       `mygames/${param.username}`
     ).then((res) => {
-      console.log(res.data);
       setGamesData(res.data);
     });
   }
@@ -30,9 +32,13 @@ function MyGames() {
 
   // edit mygames from user
   function handleEdit() {}
+
+  console.log(gamesData, "gamesData");
+  // get player details function
+  function handlePlayerDetails() {}
   return (
     <>
-      <LoginModal show={true} />
+      <LoginModal show={!loggedIn.login} />
       <div className={styles.MainDiv}>
         <div className={styles.GamesCard}>
           <Outlet />
@@ -53,6 +59,8 @@ function MyGames() {
                     buttonText="Edit Game"
                     buttonVariant="warning"
                     buttonFunction={handleEdit}
+                    MyGame={true}
+                    handlePlayerDetails={handlePlayerDetails}
                   />
                 </div>
               );

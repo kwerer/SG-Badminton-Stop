@@ -12,7 +12,6 @@ router.get("/:username", function (req, res) {
       if (err) {
         res.status(500).json(err);
       } else {
-        console.log(results);
         res.json(results);
       }
     }

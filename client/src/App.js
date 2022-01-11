@@ -13,7 +13,11 @@ import { LoginContext } from "./commonComponents/Context";
 import UserGames from "./routes/game/MyGames";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState({ login: false, username: "" });
+  const [loggedIn, setLoggedIn] = useState({
+    login: false,
+    username: "",
+    signedUp: [],
+  });
   useEffect(() => {
     if (
       sessionStorage.getItem("login") &&

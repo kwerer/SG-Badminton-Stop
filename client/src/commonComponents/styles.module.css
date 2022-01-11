@@ -19,3 +19,18 @@
   flex-direction: row;
   justify-content: center;
 }
+
+.ListGroupItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ListPlayer {
+  width: fit-content;
+  align-self: center;
+}
+
+.ListPlayerButton {
+  justify-self: flex-end;
+}

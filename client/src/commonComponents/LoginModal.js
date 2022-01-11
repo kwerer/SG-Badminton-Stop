@@ -6,7 +6,7 @@ function LoginModal(props) {
   const { show, handleClose } = props;
   return (
     <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
+      <Modal.Header>
         <Modal.Title>You are not logged in!</Modal.Title>
       </Modal.Header>
       <Modal.Body>

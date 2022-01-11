@@ -11,6 +11,7 @@ import styles from "./styles.module.css";
 import FormRowSelect from "../../commonComponents/FormRowSelect";
 import SubmitModal from "../../commonComponents/SubmitModal";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
+import LoginModal from "../../commonComponents/LoginModal";
 
 function AddGame() {
   // Context object to get the username of the logged in person who registered game
@@ -88,100 +89,103 @@ function AddGame() {
   const numPlayersList = [1, 2, 3, 4, 5];
 
   return (
-    <div className={styles.AddGameMain}>
-      <div className={styles.AddGameForm}>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <FormRow
-            label="Venue"
-            feedback="Looks Good!"
-            placeholder="e.g. Pasir Ris Sports Hall"
-            negativeFeedback="Please provide a valid venue."
-            onChangeFunction={(e) => {
-              setVenue(e.target.value);
-            }}
-          />
-          <FormRow
-            label="Fees"
-            feedback="Looks Good!"
-            negativeFeedback="Please provide a valid fee."
-            onChangeFunction={(e) => {
-              setFees(e.target.value);
-            }}
-          />
-          <FormRowSelect
-            label="Number of players"
-            options={numPlayersList}
-            onChangeFunction={(e) => {
-              setNumPlayers(e.target.value);
-            }}
-          />
-          <FormRowSelect
-            label="Level Of Play"
-            options={levelOfPlayList}
-            onChangeFunction={(e) => {
-              setLevelOfPlay(e.target.value);
-            }}
-          />
-          <FormRowSelect
-            label="Format Of Play"
-            options={formatOfPlayList}
-            onChangeFunction={(e) => {
-              setFormatOfPlay(e.target.value);
-            }}
-          />
-          <Row className={`mb-3 ${styles.FormRowGroup}`}>
-            <Form.Group as={Col} md="8" className={styles.FormTime}>
-              <Form.Label>Start Time</Form.Label>
-              <Form.Label>End Time</Form.Label>
-            </Form.Group>
-            <Form.Group
-              as={Col}
-              md="8"
-              controlId="validationCustom01"
-              className={styles.FormTime}
-            >
-              <div className={styles.FormTimeDiv}>
-                <DatePicker
-                  selected={startDate}
-                  showTimeSelect
-                  onChange={(date) => setStartDate(date)}
-                  dateFormat="Pp"
-                />
-              </div>
+    <>
+      <LoginModal show={!loggedIn.login} />
+      <div className={styles.AddGameMain}>
+        <div className={styles.AddGameForm}>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <FormRow
+              label="Venue"
+              feedback="Looks Good!"
+              placeholder="e.g. Pasir Ris Sports Hall"
+              negativeFeedback="Please provide a valid venue."
+              onChangeFunction={(e) => {
+                setVenue(e.target.value);
+              }}
+            />
+            <FormRow
+              label="Fees"
+              feedback="Looks Good!"
+              negativeFeedback="Please provide a valid fee."
+              onChangeFunction={(e) => {
+                setFees(e.target.value);
+              }}
+            />
+            <FormRowSelect
+              label="Number of players"
+              options={numPlayersList}
+              onChangeFunction={(e) => {
+                setNumPlayers(e.target.value);
+              }}
+            />
+            <FormRowSelect
+              label="Level Of Play"
+              options={levelOfPlayList}
+              onChangeFunction={(e) => {
+                setLevelOfPlay(e.target.value);
+              }}
+            />
+            <FormRowSelect
+              label="Format Of Play"
+              options={formatOfPlayList}
+              onChangeFunction={(e) => {
+                setFormatOfPlay(e.target.value);
+              }}
+            />
+            <Row className={`mb-3 ${styles.FormRowGroup}`}>
+              <Form.Group as={Col} md="8" className={styles.FormTime}>
+                <Form.Label>Start Time</Form.Label>
+                <Form.Label>End Time</Form.Label>
+              </Form.Group>
+              <Form.Group
+                as={Col}
+                md="8"
+                controlId="validationCustom01"
+                className={styles.FormTime}
+              >
+                <div className={styles.FormTimeDiv}>
+                  <DatePicker
+                    selected={startDate}
+                    showTimeSelect
+                    onChange={(date) => setStartDate(date)}
+                    dateFormat="Pp"
+                  />
+                </div>
 
-              <div className={styles.FormTimeDiv}>
-                <DatePicker
-                  selected={endDate}
-                  showTimeSelect
-                  onChange={(date) => setEndDate(date)}
-                  dateFormat="Pp"
-                />
-              </div>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Col xs={2}></Col>
-            <Col>
-              <Button type="submit" onClick={postGames}>
-                Submit
-              </Button>
-            </Col>
+                <div className={styles.FormTimeDiv}>
+                  <DatePicker
+                    selected={endDate}
+                    showTimeSelect
+                    onChange={(date) => setEndDate(date)}
+                    dateFormat="Pp"
+                  />
+                </div>
+              </Form.Group>
+            </Row>
+            <Row>
+              <Col xs={2}></Col>
+              <Col>
+                <Button type="submit" onClick={postGames}>
+                  Submit
+                </Button>
+              </Col>
 
-            <Col xs={2}></Col>
-          </Row>
-        </Form>
-        <SubmitModal
-          onHide={onHideModal}
-          show={onHideModal}
-          onHide={() => {
-            setOnHideModal(false);
-          }}
-          link="/games"
-          header="Game Successfully Added!"
-          body="Close to see your game!"
-        />
+              <Col xs={2}></Col>
+            </Row>
+          </Form>
+          <SubmitModal
+            onHide={onHideModal}
+            show={onHideModal}
+            onHide={() => {
+              setOnHideModal(false);
+            }}
+            link="/games"
+            header="Game Successfully Added!"
+            body="Close to see your game!"
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

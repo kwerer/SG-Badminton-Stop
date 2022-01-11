@@ -12,12 +12,9 @@ const organiserGame = new mongoose.Schema({
   venue: { type: String },
   date: { type: String },
   orgName: { type: String },
-  players: { type: Object },
+  players: { type: Array },
 });
 
-const orgGame = mongoose.model(
-  "organiserGame",
-  organiserGame
-);
+const orgGame = mongoose.model("organiserGame", organiserGame);
 
 export default orgGame;

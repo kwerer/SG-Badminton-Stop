@@ -1,4 +1,5 @@
 import express from "express";
+import { ObjectId } from "mongodb";
 import organiserGame from "../models/organiserGame.js";
 
 const router = express.Router();
@@ -19,14 +20,20 @@ router.get("/", async function (req, res) {
 // Receive registers from users
 router.post("/", async function (req, res) {
   console.log("games post request");
-  console.log(req.body.gameID, "req.body");
-  console.log(req.body.username, "req.body");
-  // const idd = ObjectId(req.body.gameID);
+  const idd = ObjectId(req.body.gameID);
   const user = req.body.username;
 
-  organiserGame.updateOne(
-    { _id: { $oid: req.body.gameID } },
-    { $push: { players: user } }
+  await organiserGame.updateOne(
+    { _id: idd },
+    { $push: { players: user } },
+    function (err, result) {
+      console.log("callback");
+      if (err) {
+        console.log(err, "err");
+      } else {
+        console.log(result, "result");
+      }
+    }
   );
 });
 // Create Organiser Games
