@@ -6,6 +6,7 @@ import GameCard from "../../commonComponents/GameCard";
 import styles from "./styles.module.css";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
+import UserDetailsModal from "../../commonComponents/UserDetailsModal";
 
 function MyGames() {
   // Context object to get the username of the logged in person who registered game
@@ -15,15 +16,27 @@ function MyGames() {
   const [gamesData, setGamesData] = useState([]);
 
   // store all players registered for game here
-  const [indivPlayer, setIndivPlayer] = useState({});
+  const [userDetails, setUserDetails] = useState({});
+  const [indivPlayerModal, setIndivPlayerModal] = useState(false);
 
   let param = useParams();
-
+  // first render to get all user organised games
   async function getData() {
     const response = await AxiosInstance.get(
       `mygames/${param.username}`
     ).then((res) => {
       setGamesData(res.data);
+    });
+  }
+
+  // get request for user games upon clicking details
+  async function getUserDetails(e) {
+    const params = new URLSearchParams([["username", e.target.value]]);
+    const response = await AxiosInstance.get(`mygames/${param.username}`, {
+      params,
+    }).then((res) => {
+      console.log(res.data[0], "data0");
+      setUserDetails(res.data[0]);
     });
   }
   useEffect(() => {
@@ -33,17 +46,30 @@ function MyGames() {
   // edit mygames from user
   function handleEdit() {}
 
-  console.log(gamesData, "gamesData");
   // get player details function
-  function handlePlayerDetails() {}
+  function handlePlayerDetails(e) {
+    getUserDetails(e);
+    setIndivPlayerModal(true);
+  }
+  console.log(userDetails, "userdetails");
   return (
     <>
       <LoginModal show={!loggedIn.login} />
+      <UserDetailsModal
+        show={indivPlayerModal}
+        handleClose={() => {
+          setIndivPlayerModal(false);
+        }}
+        username={userDetails.username}
+        telegramHandle={userDetails.telegramHandle}
+        email={userDetails.email}
+        phoneNumber={userDetails.hp}
+      />
       <div className={styles.MainDiv}>
         <div className={styles.GamesCard}>
           <Outlet />
           {gamesData.length !== 0 ? (
-            gamesData.reverse().map((val, key) => {
+            gamesData.map((val, key) => {
               return (
                 <div className={styles.GameCardIndivDiv} key={key}>
                   <GameCard

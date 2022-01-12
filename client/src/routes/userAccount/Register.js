@@ -14,6 +14,8 @@ function Register() {
       username: userName,
       email: email,
       password: password1,
+      hp: phoneNumber,
+      telegramHandle: telegramHandle,
     };
 
     const promise = AxiosInstance.post(
@@ -21,16 +23,19 @@ function Register() {
       addedUser
     );
 
+    // set sessionStorage to persist logged in status between refreshes
     const dataPromise = await promise.then((res) => {
       sessionStorage.setItem("login", true);
       sessionStorage.setItem("username", res.data.username);
       return res.data.username;
     });
 
+    // allow user to get into look for games page when they register
     if (dataPromise) {
       navigate("/games");
       setLoggedIn({ login: true, username: dataPromise });
     } else {
+      // if there is an error, nothing is res from the server
       alert("Username/Email is taken");
       window.location.reload();
     }
@@ -39,6 +44,8 @@ function Register() {
   // form component
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [telegramHandle, setTelegramHandle] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [validated, setValidated] = useState(false);
@@ -53,6 +60,8 @@ function Register() {
     // need to check user password is the same
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
+    } else if (password1 !== password2) {
+      alert("passwords do not match!");
     } else {
       try {
         addUser();
@@ -81,16 +90,12 @@ function Register() {
                 setUserName(e.target.value);
               }}
             />
-
-            <Form.Control.Feedback type="invalid">
-              Username is taken, please enter another username
-            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="validationCustom02">
             <Form.Label>Email</Form.Label>
             <Form.Control
               required
-              type="text"
+              type="email"
               placeholder="Email"
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -98,14 +103,34 @@ function Register() {
             />
 
             <Form.Control.Feedback type="invalid">
-              Email already has an account that is signed up.
+              Email is not valid
             </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="validationCustom02">
+            <Form.Label>Phone Number</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Phone Number"
+              onChange={(e) => {
+                setPhoneNumber(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group controlId="validationCustom02">
+            <Form.Label>Telegram Handle</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Telegram Handle"
+              onChange={(e) => {
+                setTelegramHandle(e.target.value);
+              }}
+            />
           </Form.Group>
           <Form.Group controlId="validationCustom02">
             <Form.Label>Password</Form.Label>
             <Form.Control
               required
-              type="text"
+              type="password"
               placeholder="Password"
               onChange={(e) => {
                 setPassword1(e.target.value);
@@ -116,16 +141,12 @@ function Register() {
             <Form.Label>Re-enter Password</Form.Label>
             <Form.Control
               required
-              type="text"
+              type="password"
               placeholder="Re-enter Password"
               onChange={(e) => {
                 setPassword2(e.target.value);
               }}
             />
-
-            <Form.Control.Feedback type="invalid">
-              Please ensure that the password is the same.
-            </Form.Control.Feedback>
           </Form.Group>
           <div className={styles.RegisterLoginButton}>
             <Button type="submit">Register!</Button>

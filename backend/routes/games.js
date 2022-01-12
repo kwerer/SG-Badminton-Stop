@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Get all Organiser Games
 router.get("/", async function (req, res) {
-  console.log("gamessdf");
+  console.log("All Games");
   // find({}) here will get you everything
   organiserGame.find({}, function (err, result) {
     if (err) {

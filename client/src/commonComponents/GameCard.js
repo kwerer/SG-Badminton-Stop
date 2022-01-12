@@ -47,10 +47,6 @@ function GameCard(props) {
   // return names of players as an array
   const playerNames = Object.values(players);
 
-  console.log(loggedIn.username, "logged in user");
-  console.log(players, "list of players");
-  console.log([1, 2, 3], "incluide");
-  console.log(players.includes(loggedIn.username), "testing");
   return (
     <>
       <LoginModal show={showModal} handleClose={handleClose} />
@@ -90,6 +86,7 @@ function GameCard(props) {
                         <span className={styles.ListPlayerButton}>
                           <Button
                             variant="info"
+                            value={player}
                             onClick={handlePlayerDetails}
                           >
                             Details

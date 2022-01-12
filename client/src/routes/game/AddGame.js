@@ -54,8 +54,14 @@ function AddGame() {
     // object add game to games collection
     const addedGame = {
       numOfPlayers: numPlayers,
-      time: `${startDate.getHours()}${startDate.getMinutes()} -
-        ${endDate.getHours()}${endDate.getMinutes()}`,
+      time: `${startDate.getHours()}${
+        startDate.getMinutes() < 10 ? "0" : ""
+      }${startDate.getMinutes()} 
+       -
+        ${endDate.getHours()}${
+        endDate.getMinutes() < 10 ? "0" : ""
+      }${endDate.getMinutes()}
+      `,
       levelOfPlay: levelOfPlay,
       formatOfPlay: formatOfPlay,
       fees: fees,

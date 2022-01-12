@@ -12,6 +12,8 @@ router.post("/", async function (req, res) {
     {
       username: req.body.username,
       email: req.body.email,
+      hp: req.body.hp,
+      telegramHandle: req.body.telegramHandle,
     },
     req.body.password,
     function (err, user) {
