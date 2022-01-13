@@ -19,13 +19,6 @@ export default function Home() {
   // state to determine if the register modal is on or off
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
 
-  function handleOpenRegisterModal() {
-    setRegisterModalOpen(true);
-  }
-  function handleCloseRegisterModal() {
-    setRegisterModalOpen(false);
-  }
-
   // all games stored as objects in a list
   const [gamesData, setGamesData] = useState([]);
 
@@ -41,6 +34,7 @@ export default function Home() {
 
   // function to update data in mongodb game data document (add user)
   async function registerUserUpdate(ID) {
+    console.log(ID, "registeruserupdate");
     const registerData = {
       username: loggedIn.username,
       gameID: ID,
@@ -56,11 +50,11 @@ export default function Home() {
 
   // register loggedin user
   function handleRegister(e) {
-    const gameID = e.target.value;
-    console.log(gameID, "game id");
+    console.log(e.target.value, "game id");
+    console.log(loggedIn, "logeedin");
     if (loggedIn.login) {
       console.log("logged in and register");
-      registerUserUpdate(gameID);
+      registerUserUpdate(e.target.value);
       setRegisterModalOpen(false);
       window.location.reload();
     } else {
@@ -96,33 +90,32 @@ export default function Home() {
         <div className={styles.GamesCard}>
           <Outlet />
           {gamesData.length !== 0 ? (
-            gamesData.reverse().map((val, key) => {
+            gamesData.map((val, key) => {
               return (
-                <div className={styles.GameCardIndivDiv} key={key}>
-                  <GameCard
-                    title={val.venue}
-                    date={val.date}
-                    players={val.players}
-                    time={val.time}
-                    level={val.levelOfPlay}
-                    format={val.formatOfPlay}
-                    fees={val.fees}
-                    id={val._id}
-                    name={val.orgName}
-                    key={key}
-                    buttonText="Sign Up!"
-                    registeredButtonText="Registered!"
-                    buttonVariant="secondary"
-                    registeredVariant="success"
-                    buttonFunction={handleRegister}
-                    organiserButtonText="Edit Your Game"
-                    organiserButtonVariant="warning"
-                    organiserButtonFunction={handleEditGame}
-                    registerModalOpen={registerModalOpen}
-                    handleOpenRegisterModal={handleOpenRegisterModal}
-                    handleCloseRegisterModal={handleCloseRegisterModal}
-                  />
-                </div>
+                <>
+                  <div className={styles.GameCardIndivDiv} key={key}>
+                    <GameCard
+                      title={val.venue}
+                      date={val.date}
+                      players={val.players}
+                      time={val.time}
+                      level={val.levelOfPlay}
+                      format={val.formatOfPlay}
+                      fees={val.fees}
+                      id={val._id}
+                      name={val.orgName}
+                      key={key}
+                      buttonFunction={handleRegister}
+                      buttonVariant="secondary"
+                      buttonText="Sign Up!"
+                      registeredButtonText="Registered!"
+                      registeredVariant="success"
+                      organiserButtonFunction={handleEditGame}
+                      organiserButtonVariant="warning"
+                      organiserButtonText="Edit Your Game"
+                    />
+                  </div>
+                </>
               );
             })
           ) : (

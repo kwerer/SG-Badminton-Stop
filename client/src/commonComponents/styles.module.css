@@ -8,6 +8,15 @@
   padding: 10px 0;
 }
 
+.HeaderUserAccounts {
+  min-width: 20%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .CardImage {
   max-height: 150px;
   width: auto !important;
@@ -18,6 +27,11 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.ListGroup {
+  max-height: 165px;
+  overflow-y: auto;
 }
 
 .ListGroupItem {
@@ -33,4 +47,8 @@
 
 .ListPlayerButton {
   justify-self: flex-end;
+}
+
+.LogoutModalContainer {
+  border: 0px !important;
 }

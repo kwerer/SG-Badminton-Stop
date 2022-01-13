@@ -20,10 +20,11 @@ router.get("/", async function (req, res) {
 // Receive registers from users
 router.post("/", async function (req, res) {
   console.log("games post request");
+  console.log(req.body, "thisreqbody");
   const idd = ObjectId(req.body.gameID);
   const user = req.body.username;
 
-  await organiserGame.updateOne(
+  organiserGame.updateOne(
     { _id: idd },
     { $push: { players: user } },
     function (err, result) {

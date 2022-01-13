@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { LoginContext } from "./Context";
 import { FiUser } from "react-icons/fi";
 import {
@@ -13,16 +13,24 @@ import styles from "./styles.module.css";
 import Logo from "../Images/Rectangle-logo-without-bg.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import LogoutModal from "./LogoutModal";
 
 export default function Header() {
   // user context for login check
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
   // to bring user back to main page using navigate
   const navigate = useNavigate();
+  // logout modal state
+  const [loggedOutModal, setLoggedOutModal] = useState(false);
+  // function to close logout modal
+  function handleCloseLogoutModal() {
+    setLoggedOutModal(false);
+  }
   // function to clear login details
   function handleLogOut() {
     sessionStorage.clear();
     setLoggedIn({ loggedIn: false, username: "" });
+    setLoggedOutModal(true);
     navigate("/games");
     // create modal here to log out user
   }
@@ -51,6 +59,10 @@ export default function Header() {
   ];
   return (
     <>
+      <LogoutModal
+        handleClose={handleCloseLogoutModal}
+        show={loggedOutModal}
+      />
       <Navbar bg="light" variant="light" expand="lg">
         <Container fluid>
           <Navbar.Brand as={Link} to="games">
@@ -104,14 +116,15 @@ export default function Header() {
                 </div>
               </>
             ) : (
-              <>
-                <Button as={Link} to="register" variant="outline-primary">
-                  Register
-                </Button>
+              <div className={styles.HeaderUserAccounts}>
                 <Button as={Link} to="login" variant="outline-primary">
                   Login
                 </Button>
-              </>
+                <span>or</span>
+                <Button as={Link} to="register" variant="outline-primary">
+                  Register
+                </Button>
+              </div>
             )}
           </Navbar.Collapse>
         </Container>

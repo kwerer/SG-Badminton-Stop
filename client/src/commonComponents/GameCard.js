@@ -1,11 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Card,
-  Button,
-  ListGroup,
-  ListGroupItem,
-  Modal,
-} from "react-bootstrap";
+import { Card, Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import { LoginContext } from "./Context.js";
 import Logo from "../Images/Logo.jpg";
 import styles from "./styles.module.css";
@@ -20,8 +14,8 @@ function GameCard(props) {
     level,
     format,
     fees,
-    name,
     id,
+    name,
     buttonFunction,
     buttonVariant,
     buttonText,
@@ -30,9 +24,6 @@ function GameCard(props) {
     organiserButtonFunction,
     organiserButtonVariant,
     organiserButtonText,
-    registerModalOpen,
-    handleOpenRegisterModal,
-    handleCloseRegisterModal,
     MyGame,
     handlePlayerDetails,
   } = props;
@@ -70,10 +61,9 @@ function GameCard(props) {
         </Card.Body>
         {/*  logic to list players  */}
         {players.length !== 0 ? (
-          <ListGroup className="list-group-flush">
+          <ListGroup className={`${styles.ListGroup} list-group-flush`}>
             {players !== {}
               ? playerNames.map((player, key) => {
-                  console.log(MyGame, ",ygame");
                   return (
                     <ListGroupItem
                       key={key}
@@ -99,61 +89,38 @@ function GameCard(props) {
               : null}
           </ListGroup>
         ) : null}
-        {/* logic for organiser button */}
-        {loggedIn.username !== name ? (
+        {/* logic for organiser button on all games page */}
+        {MyGame === true ? null : (
           <>
-            <Modal
-              show={registerModalOpen}
-              onHide={handleCloseRegisterModal}
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Sign Up for game!</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                By signing up you will give your phone number to the
-                organiser to allow them to contact you!
-              </Modal.Body>
-              <Modal.Footer>
+            {loggedIn.username !== name ? (
+              <>
+                <Card.Body>
+                  {!players.includes(loggedIn.username) ? (
+                    <Button
+                      value={id}
+                      onClick={buttonFunction}
+                      variant={buttonVariant}
+                    >
+                      {buttonText}
+                    </Button>
+                  ) : (
+                    <Button disabled variant={registeredVariant}>
+                      {registeredButtonText}
+                    </Button>
+                  )}
+                </Card.Body>
+              </>
+            ) : (
+              <Card.Body>
                 <Button
-                  variant="secondary"
-                  onClick={handleCloseRegisterModal}
+                  onClick={organiserButtonFunction}
+                  variant={organiserButtonVariant}
                 >
-                  Close
+                  {organiserButtonText}
                 </Button>
-                <Button
-                  variant="primary"
-                  value={id}
-                  onClick={(e) => buttonFunction(e)}
-                >
-                  Sign Up!
-                </Button>
-              </Modal.Footer>
-            </Modal>
-            <Card.Body>
-              {!players.includes(loggedIn.username) ? (
-                <Button
-                  value={id}
-                  onClick={handleOpenRegisterModal}
-                  variant={buttonVariant}
-                >
-                  {buttonText}
-                </Button>
-              ) : (
-                <Button disabled variant={registeredVariant}>
-                  {registeredButtonText}
-                </Button>
-              )}
-            </Card.Body>
+              </Card.Body>
+            )}
           </>
-        ) : (
-          <Card.Body>
-            <Button
-              onClick={organiserButtonFunction}
-              variant={organiserButtonVariant}
-            >
-              {organiserButtonText}
-            </Button>
-          </Card.Body>
         )}
       </Card>
     </>
