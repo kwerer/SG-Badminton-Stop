@@ -51,6 +51,20 @@ function MyGames() {
     getUserDetails(e);
     setIndivPlayerModal(true);
   }
+  // axios request to update db
+  async function deleteGame(id) {
+    const response = await AxiosInstance.delete("/mygames", {
+      data: { gameID: id },
+    }).then((res) => {
+      console.log(res, "response");
+    });
+  }
+  // function to delete game from MyGames
+  function handleDeleteGame(e) {
+    console.log(e.target.value, "id");
+    deleteGame(e.target.value);
+    window.location.reload();
+  }
   console.log(userDetails, "userdetails");
   return (
     <>
@@ -81,12 +95,11 @@ function MyGames() {
                     format={val.formatOfPlay}
                     fees={val.fees}
                     id={val._id}
+                    name={val.orgName}
                     key={key}
-                    buttonText="Edit Game"
-                    buttonVariant="warning"
-                    buttonFunction={handleEdit}
                     MyGame={true}
                     handlePlayerDetails={handlePlayerDetails}
+                    handleDeleteGame={handleDeleteGame}
                   />
                 </div>
               );

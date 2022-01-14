@@ -60,4 +60,27 @@ router.post("/new", async function (req, res) {
   }
 });
 
+router.delete("/", function (req, res) {
+  console.log("ok");
+  console.log(req.body, "body");
+
+  const userId = req.body.userId;
+  const gameId = req.body.gameId;
+  const idd = ObjectId(gameId);
+  console.log(idd, "idd");
+  console.log(userId, "userId");
+
+  organiserGame.updateOne(
+    { _id: idd },
+    { $pull: { players: userId } },
+    function (err, result) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
+
 export default router;

@@ -8,6 +8,7 @@ import {
   Container,
   Button,
   Dropdown,
+  ButtonGroup,
 } from "react-bootstrap";
 import styles from "./styles.module.css";
 import Logo from "../Images/Rectangle-logo-without-bg.png";
@@ -91,7 +92,7 @@ export default function Header() {
 
             {loggedIn.login ? (
               <>
-                <div>
+                <div className={styles.HeaderUserAccountsLoggedIn}>
                   <Dropdown>
                     <Dropdown.Toggle
                       variant="outline-primary"
@@ -116,15 +117,15 @@ export default function Header() {
                 </div>
               </>
             ) : (
-              <div className={styles.HeaderUserAccounts}>
+              <ButtonGroup className={styles.HeaderUserAccounts}>
                 <Button as={Link} to="login" variant="outline-primary">
                   Login
                 </Button>
-                <span>or</span>
+
                 <Button as={Link} to="register" variant="outline-primary">
                   Register
                 </Button>
-              </div>
+              </ButtonGroup>
             )}
           </Navbar.Collapse>
         </Container>

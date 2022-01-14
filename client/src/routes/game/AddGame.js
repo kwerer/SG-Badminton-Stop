@@ -139,17 +139,14 @@ function AddGame() {
               }}
             />
             <Row className={`mb-3 ${styles.FormRowGroup}`}>
-              <Form.Group as={Col} md="8" className={styles.FormTime}>
-                <Form.Label>Start Time</Form.Label>
-                <Form.Label>End Time</Form.Label>
-              </Form.Group>
               <Form.Group
                 as={Col}
                 md="8"
                 controlId="validationCustom01"
                 className={styles.FormTime}
               >
-                <div className={styles.FormTimeDiv}>
+                <div>
+                  <Form.Label>Start Time</Form.Label>
                   <DatePicker
                     selected={startDate}
                     showTimeSelect
@@ -158,7 +155,8 @@ function AddGame() {
                   />
                 </div>
 
-                <div className={styles.FormTimeDiv}>
+                <div>
+                  <Form.Label>End Time</Form.Label>
                   <DatePicker
                     selected={endDate}
                     showTimeSelect
@@ -168,15 +166,12 @@ function AddGame() {
                 </div>
               </Form.Group>
             </Row>
-            <Row>
-              <Col xs={2}></Col>
-              <Col>
+            <Row className={`mb-3 ${styles.FormRowGroup}`}>
+              <Col md="8">
                 <Button type="submit" onClick={postGames}>
                   Submit
                 </Button>
               </Col>
-
-              <Col xs={2}></Col>
             </Row>
           </Form>
           <SubmitModal

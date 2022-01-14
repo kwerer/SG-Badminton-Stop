@@ -67,6 +67,22 @@ export default function Home() {
   function handleEditGame() {
     navigate(`/mygames/${loggedIn.username}`);
   }
+  // axios request to remove user
+  async function removeUser(data) {
+    const filterList = data.split(",");
+    const userId = filterList[0];
+    const gameId = filterList[1];
+    console.log(filterList, "filterList");
+    const response = await AxiosInstance.delete("/games", {
+      // data here is the value of button passed as an array
+      data: { gameId: gameId, userId: userId },
+    });
+  }
+  // allow individual user to remove themselves
+  function handleRemoveUser(e) {
+    removeUser(e.target.value);
+    window.location.reload();
+  }
   return (
     <>
       <LoginModal
@@ -104,7 +120,6 @@ export default function Home() {
                       fees={val.fees}
                       id={val._id}
                       name={val.orgName}
-                      key={key}
                       buttonFunction={handleRegister}
                       buttonVariant="secondary"
                       buttonText="Sign Up!"
@@ -113,6 +128,7 @@ export default function Home() {
                       organiserButtonFunction={handleEditGame}
                       organiserButtonVariant="warning"
                       organiserButtonText="Edit Your Game"
+                      handleRemoveUser={handleRemoveUser}
                     />
                   </div>
                 </>

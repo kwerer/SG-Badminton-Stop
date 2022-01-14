@@ -1,6 +1,8 @@
 import express from "express";
 import organiserGame from "../models/organiserGame.js";
 import userAccount from "../models/userAccount.js";
+import { ObjectId } from "mongodb";
+
 const router = express.Router();
 
 // Get req for games from the user
@@ -43,8 +45,17 @@ router.get("/:username", function (req, res) {
   }
 });
 
-// Post req to get user's username
-
-// Edit games for user
+// Delete games for organiser
+router.delete("/", function (req, res) {
+  console.log(req.body.gameID, "delete req");
+  const id = ObjectId(req.body.gameID);
+  organiserGame.findByIdAndDelete(id, function (err, result) {
+    if (err) {
+      res.status(500).json(err);
+    } else {
+      res.send("Game deleted");
+    }
+  });
+});
 
 export default router;

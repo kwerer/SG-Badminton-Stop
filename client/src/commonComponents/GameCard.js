@@ -4,6 +4,7 @@ import { LoginContext } from "./Context.js";
 import Logo from "../Images/Logo.jpg";
 import styles from "./styles.module.css";
 import LoginModal from "../commonComponents/LoginModal.js";
+import { DashCircle } from "react-bootstrap-icons";
 
 function GameCard(props) {
   const {
@@ -26,6 +27,8 @@ function GameCard(props) {
     organiserButtonText,
     MyGame,
     handlePlayerDetails,
+    handleDeleteGame,
+    handleRemoveUser,
   } = props;
   // Use context object to check if user is logged in or not
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
@@ -40,8 +43,9 @@ function GameCard(props) {
 
   return (
     <>
+      {/* renders too many modals here  */}
       <LoginModal show={showModal} handleClose={handleClose} />
-      <Card style={{ width: "18rem" }}>
+      <Card style={{ width: "18rem" }} className={styles.MainCard}>
         <Card.Img variant="top" src={Logo} className={styles.CardImage} />
         <Card.Body>
           <Card.Title>Venue: {title}</Card.Title>
@@ -69,11 +73,28 @@ function GameCard(props) {
                       key={key}
                       className={styles.ListGroupItem}
                     >
-                      <span className={MyGame ? styles.ListPlayer : null}>
+                      <span
+                        className={MyGame ? styles.ListPlayer : null}
+                        key={key}
+                      >
                         {key + 1}. {player}
                       </span>
+                      {player === loggedIn.username ? (
+                        <span>
+                          <Button
+                            onClick={handleRemoveUser}
+                            value={[player, id]}
+                            variant="danger"
+                          >
+                            <DashCircle />
+                          </Button>
+                        </span>
+                      ) : null}
                       {MyGame ? (
-                        <span className={styles.ListPlayerButton}>
+                        <span
+                          className={styles.ListPlayerButton}
+                          key={key}
+                        >
                           <Button
                             variant="info"
                             value={player}
@@ -90,7 +111,19 @@ function GameCard(props) {
           </ListGroup>
         ) : null}
         {/* logic for organiser button on all games page */}
-        {MyGame === true ? null : (
+        {MyGame === true ? (
+          <Card.Body>
+            <Button
+              variant="danger"
+              onClick={(e) => {
+                handleDeleteGame(e);
+              }}
+              value={id}
+            >
+              Delete Game
+            </Button>
+          </Card.Body>
+        ) : (
           <>
             {loggedIn.username !== name ? (
               <>
