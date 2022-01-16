@@ -49,6 +49,12 @@
   width: fit-content;
   align-self: center;
 }
+.ListPlayer456 {
+  color: #ec902f;
+}
+
+.RemoveUserButton {
+}
 
 .ListPlayerButton {
   justify-self: flex-end;

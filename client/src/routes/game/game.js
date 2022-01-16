@@ -27,6 +27,7 @@ export default function Home() {
     const response = await AxiosInstance.get("/games").then((res) => {
       setGamesData(res.data);
     });
+    return response;
   }
   useEffect(() => {
     getData();
@@ -48,10 +49,10 @@ export default function Home() {
     const response = await AxiosInstance.post("/games", removeData);
   }
 
-  // register loggedin user
+  // register loggedin user for game
+  // what does this function do?
+
   function handleRegister(e) {
-    console.log(e.target.value, "game id");
-    console.log(loggedIn, "logeedin");
     if (loggedIn.login) {
       console.log("logged in and register");
       registerUserUpdate(e.target.value);
@@ -72,7 +73,7 @@ export default function Home() {
     const filterList = data.split(",");
     const userId = filterList[0];
     const gameId = filterList[1];
-    console.log(filterList, "filterList");
+
     const response = await AxiosInstance.delete("/games", {
       // data here is the value of button passed as an array
       data: { gameId: gameId, userId: userId },
@@ -120,6 +121,7 @@ export default function Home() {
                       fees={val.fees}
                       id={val._id}
                       name={val.orgName}
+                      NumPlayers={val.numOfPlayers}
                       buttonFunction={handleRegister}
                       buttonVariant="secondary"
                       buttonText="Sign Up!"

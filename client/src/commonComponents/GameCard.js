@@ -17,6 +17,7 @@ function GameCard(props) {
     fees,
     id,
     name,
+    NumPlayers,
     buttonFunction,
     buttonVariant,
     buttonText,
@@ -60,6 +61,8 @@ function GameCard(props) {
             <br />
             Fees: {fees}
             <br />
+            Num of Players: {NumPlayers}
+            <br />
             Organiser: {name}
           </Card.Text>
         </Card.Body>
@@ -74,19 +77,22 @@ function GameCard(props) {
                       className={styles.ListGroupItem}
                     >
                       <span
-                        className={MyGame ? styles.ListPlayer : null}
+                        className={`${styles.ListPlayer} ${
+                          key >= NumPlayers ? styles.ListPlayer456 : null
+                        }`}
                         key={key}
                       >
-                        {key + 1}. {player}
+                        {key + 1}. {player}{" "}
+                        {key >= NumPlayers ? "(reserve)" : null}
                       </span>
                       {player === loggedIn.username ? (
                         <span>
                           <Button
-                            onClick={handleRemoveUser}
+                            onClick={(e) => handleRemoveUser(e)}
                             value={[player, id]}
-                            variant="danger"
+                            className={styles.RemoveUserButton}
                           >
-                            <DashCircle />
+                            Remove
                           </Button>
                         </span>
                       ) : null}
