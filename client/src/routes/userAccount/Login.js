@@ -30,7 +30,7 @@ function Login() {
 
     if (dataPromise) {
       navigate("/games");
-      setLoggedIn({ login: true, username: dataPromise });
+      setLoggedIn({ ...loggedIn, login: true, username: dataPromise });
     } else {
       alert("Wrong login credentials");
     }

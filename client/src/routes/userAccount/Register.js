@@ -33,7 +33,7 @@ function Register() {
     // allow user to get into look for games page when they register
     if (dataPromise) {
       navigate("/games");
-      setLoggedIn({ login: true, username: dataPromise });
+      setLoggedIn({ ...loggedIn, login: true, username: dataPromise });
     } else {
       // if there is an error, nothing is res from the server
       alert("Username/Email is taken");

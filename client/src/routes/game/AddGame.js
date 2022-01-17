@@ -12,6 +12,7 @@ import FormRowSelect from "../../commonComponents/FormRowSelect";
 import SubmitModal from "../../commonComponents/SubmitModal";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
+import { TailSpin } from "react-loader-spinner";
 
 function AddGame() {
   // Context object to get the username of the logged in person who registered game
@@ -50,15 +51,17 @@ function AddGame() {
   const [venue, setVenue] = useState("");
 
   // axios post request
-  function postGames() {
+  async function postGames() {
     // object add game to games collection
     const addedGame = {
       numOfPlayers: numPlayers,
-      time: `${startDate.getHours()}${
+      time: `${
+        startDate.getHours() < 10 ? "0" : ""
+      }${startDate.getHours()}${
         startDate.getMinutes() < 10 ? "0" : ""
       }${startDate.getMinutes()} 
        -
-        ${endDate.getHours()}${
+        ${endDate.getHours() < 10 ? "0" : ""}${endDate.getHours()}${
         endDate.getMinutes() < 10 ? "0" : ""
       }${endDate.getMinutes()}
       `,
@@ -74,10 +77,12 @@ function AddGame() {
       players: [],
     };
     // post games to
-    AxiosInstance.post(
+    setLoggedIn({ ...loggedIn, isLoading: true });
+    const response = await AxiosInstance.post(
       `${process.env.REACT_APP_BASE_URL}/games/new`,
       addedGame
     );
+    setLoggedIn({ ...loggedIn, isLoading: false });
     // console.log(addedGame, "addedGame");
   }
 
@@ -171,6 +176,9 @@ function AddGame() {
                 <Button type="submit" onClick={postGames}>
                   Submit
                 </Button>
+                {loggedIn.isLoading ? (
+                  <TailSpin color="#00BFFF" height={80} width={80} />
+                ) : null}
               </Col>
             </Row>
           </Form>

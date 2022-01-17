@@ -8,22 +8,25 @@ import AddGame from "./routes/game/AddGame";
 import Login from "./routes/userAccount/Login";
 import Register from "./routes/userAccount/Register";
 import "./App.css";
-
+import About from "./routes/About";
 import { LoginContext } from "./commonComponents/Context";
 import UserGames from "./routes/game/MyGames";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState({
     login: false,
     username: "",
-    signedUp: [],
+    isLoading: false,
   });
+  console.log(loggedIn, "usercontext");
   useEffect(() => {
     if (
       sessionStorage.getItem("login") &&
       sessionStorage.getItem("username")
     ) {
       setLoggedIn({
+        ...loggedIn,
         login: sessionStorage.getItem("login"),
         username: sessionStorage.getItem("username"),
       });
@@ -39,6 +42,7 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="mygames/:username/*" element={<UserGames />} />
+        <Route path="about*" element={<About />} />
         {/* <Route path="/" element={<App />} />
       <Route path="/" element={<App />} />
       <Route path="/" element={<App />} /> */}
