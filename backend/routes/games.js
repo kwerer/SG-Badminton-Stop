@@ -7,15 +7,21 @@ const router = express.Router();
 // Get all Organiser Games
 router.get("/", async function (req, res) {
   console.log("All Games");
+
   // find({}) here will get you everything
-  organiserGame.find({}, function (err, result) {
-    if (err) {
-      res.status(500).json(err);
-    } else {
-      // you will send this to react when you get from axios
-      res.json(result);
-    }
-  });
+  organiserGame
+    .find(
+      { date: { $gte: Date.now() - 86400000 } },
+      function (err, result) {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          // you will send this to react when you get from axios
+          res.json(result);
+        }
+      }
+    )
+    .limit(27);
 });
 // Receive registers from users
 router.post("/", async function (req, res) {
@@ -50,20 +56,18 @@ router.post("/new", async function (req, res) {
     date: req.body.date,
     orgName: req.body.orgName,
     players: req.body.players,
+    startTimeInMs: req.body.startTimeInMs,
   });
 
   try {
     const savedGame = await newOrganiserGame.save();
-    res.status(201).json(savedGame);
+    res.status(201).send({ isDone: true });
   } catch (e) {
     res.status(500).json(e);
   }
 });
 
 router.delete("/", function (req, res) {
-  console.log("ok");
-  console.log(req.body, "body");
-
   const userId = req.body.userId;
   const gameId = req.body.gameId;
   const idd = ObjectId(gameId);

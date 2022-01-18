@@ -80,7 +80,6 @@ function GameCard(props) {
                         className={`${styles.ListPlayer} ${
                           key >= NumPlayers ? styles.ListPlayer456 : null
                         }`}
-                        key={key}
                       >
                         {key + 1}. {player}{" "}
                         {key >= NumPlayers ? "(reserve)" : null}
@@ -97,10 +96,7 @@ function GameCard(props) {
                         </span>
                       ) : null}
                       {MyGame ? (
-                        <span
-                          className={styles.ListPlayerButton}
-                          key={key}
-                        >
+                        <span className={styles.ListPlayerButton}>
                           <Button
                             variant="info"
                             value={player}
@@ -117,7 +113,8 @@ function GameCard(props) {
           </ListGroup>
         ) : null}
         {/* logic for organiser button on all games page */}
-        {MyGame === true ? (
+
+        {MyGame ? (
           <Card.Body>
             <Button
               variant="danger"

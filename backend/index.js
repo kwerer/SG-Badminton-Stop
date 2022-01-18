@@ -13,6 +13,8 @@ import games from "./routes/games.js";
 import login from "./routes/login.js";
 import register from "./routes/register.js";
 import mygames from "./routes/mygames.js";
+import registeredgames from "./routes/registeredgames.js";
+import mail from "./routes/mail.js";
 // import userAccount Schema
 import userAccount from "./models/userAccount.js";
 
@@ -59,6 +61,8 @@ app.use("/games", games);
 app.use("/login", login);
 app.use("/register", register);
 app.use("/mygames", mygames);
+app.use("/registeredgames", registeredgames);
+app.use("/mail", mail);
 
 app.listen(3001, () => {
   console.log("server started on port 3001");

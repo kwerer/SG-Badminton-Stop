@@ -47,16 +47,6 @@ export default function Header() {
       link: "about",
       disabled: false,
     },
-    {
-      title: "News (Coming Soon!)",
-      link: "News",
-      disabled: true,
-    },
-    {
-      title: "Shop (Coming Soon!)",
-      link: "Shop",
-      disabled: true,
-    },
   ];
   return (
     <>
@@ -108,6 +98,12 @@ export default function Header() {
                         to={`mygames/${loggedIn.username}`}
                       >
                         My Games
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Link}
+                        to={`registeredgames/${loggedIn.username}`}
+                      >
+                        Registered Games
                       </Dropdown.Item>
                       <Dropdown.Item onClick={handleLogOut}>
                         Log Out

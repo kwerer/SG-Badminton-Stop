@@ -23,14 +23,22 @@ function Login() {
     );
 
     const dataPromise = await promise.then((res) => {
+      console.log(res.data, "res.data");
       sessionStorage.setItem("login", true);
       sessionStorage.setItem("username", res.data.username);
-      return res.data.username;
+      sessionStorage.setItem("email", res.data.email);
+
+      return res.data;
     });
 
     if (dataPromise) {
       navigate("/games");
-      setLoggedIn({ ...loggedIn, login: true, username: dataPromise });
+      setLoggedIn({
+        ...loggedIn,
+        login: true,
+        username: dataPromise.username,
+        email: dataPromise.email,
+      });
     } else {
       alert("Wrong login credentials");
     }

@@ -27,13 +27,19 @@ function Register() {
     const dataPromise = await promise.then((res) => {
       sessionStorage.setItem("login", true);
       sessionStorage.setItem("username", res.data.username);
-      return res.data.username;
+      sessionStorage.setItem("email", res.data.email);
+      return res.data;
     });
 
     // allow user to get into look for games page when they register
     if (dataPromise) {
       navigate("/games");
-      setLoggedIn({ ...loggedIn, login: true, username: dataPromise });
+      setLoggedIn({
+        ...loggedIn,
+        login: true,
+        username: dataPromise.username,
+        email: dataPromise.email,
+      });
     } else {
       // if there is an error, nothing is res from the server
       alert("Username/Email is taken");
@@ -49,6 +55,7 @@ function Register() {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [validated, setValidated] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   // get the url from where the user was from
   const navigate = useNavigate();
   const handleSubmit = (event) => {
@@ -57,11 +64,27 @@ function Register() {
     // 2. email is taken
     event.preventDefault();
     event.stopPropagation();
-    // need to check user password is the same
+    // check if user is using common password
+    const commonPassword = [
+      "123456",
+      "password",
+      "12345",
+      "123456789",
+      "password1",
+      "abc123",
+      "12345678",
+      "qwerty",
+    ];
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
+      // need to check user password is the same
     } else if (password1 !== password2) {
-      alert("passwords do not match!");
+      alert("Passwords do not match");
+    } else if (
+      commonPassword.includes(password1) ||
+      password1.length < 5
+    ) {
+      alert("Please use a stronger password");
     } else {
       try {
         addUser();
@@ -80,7 +103,7 @@ function Register() {
     <div className={styles.RegisterLoginMain}>
       <div className={styles.RegisterLoginForm}>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group controlId="validationCustom01">
+          <Form.Group>
             <Form.Label>Username</Form.Label>
             <Form.Control
               required
@@ -91,8 +114,8 @@ function Register() {
               }}
             />
           </Form.Group>
-          <Form.Group controlId="validationCustom02">
-            <Form.Label>Email</Form.Label>
+          <Form.Group>
+            <Form.Label>Email (Required)</Form.Label>
             <Form.Control
               required
               type="email"
@@ -106,7 +129,7 @@ function Register() {
               Email is not valid
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="validationCustom02">
+          <Form.Group>
             <Form.Label>Phone Number</Form.Label>
             <Form.Control
               type="number"
@@ -116,17 +139,17 @@ function Register() {
               }}
             />
           </Form.Group>
-          <Form.Group controlId="validationCustom02">
-            <Form.Label>Telegram Handle</Form.Label>
+          <Form.Group>
+            <Form.Label>Telegram Handle (If applicable)</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Telegram Handle"
+              placeholder="@example"
               onChange={(e) => {
                 setTelegramHandle(e.target.value);
               }}
             />
           </Form.Group>
-          <Form.Group controlId="validationCustom02">
+          <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
               required
@@ -137,7 +160,7 @@ function Register() {
               }}
             />
           </Form.Group>
-          <Form.Group controlId="validationCustom02">
+          <Form.Group>
             <Form.Label>Re-enter Password</Form.Label>
             <Form.Control
               required

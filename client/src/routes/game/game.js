@@ -26,7 +26,9 @@ export default function Home() {
   // get game cards
   async function getData() {
     const response = await AxiosInstance.get("/games").then((res) => {
-      setGamesData(res.data);
+      const data = res.data.reverse();
+
+      setGamesData(data);
     });
   }
   useEffect(() => {
@@ -50,17 +52,28 @@ export default function Home() {
     const removeData = { username: loggedIn.username, gameID: ID };
     setLoggedIn({ ...loggedIn, isLoading: true });
     const response = await AxiosInstance.post("/games", removeData);
+
     setLoggedIn({ ...loggedIn, isLoading: false });
   }
 
-  // register loggedin user for game
-  // what does this function do?
+  // confirmation email for registering user
+  async function registerUserConfirmationEmail() {
+    const userData = {
+      to: loggedIn.email,
+      subject: "Registered!",
+      text: loggedIn.username,
+    };
+    const response = AxiosInstance.post("/mail/registerUser", userData);
+  }
 
+  // register loggedin user for game
   function handleRegister(e) {
     if (loggedIn.login) {
       console.log("logged in and register");
       registerUserUpdate(e.target.value);
       setRegisterModalOpen(false);
+      // function to send email to confirm registered user
+      registerUserConfirmationEmail();
       window.location.reload();
     } else {
       // modal to ask user to login
@@ -133,6 +146,7 @@ export default function Home() {
                           fees={val.fees}
                           id={val._id}
                           name={val.orgName}
+                          key={key}
                           NumPlayers={val.numOfPlayers}
                           buttonFunction={handleRegister}
                           buttonVariant="secondary"

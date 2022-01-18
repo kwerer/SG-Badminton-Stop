@@ -8,6 +8,7 @@ const organiserGame = new mongoose.Schema({
   levelOfPlay: { type: String },
   formatOfPlay: { type: String },
   uploadDate: Date,
+  startTimeInMs: { type: String },
   fees: { type: String },
   venue: { type: String },
   date: { type: String },

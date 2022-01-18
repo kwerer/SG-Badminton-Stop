@@ -9,7 +9,7 @@ import LoginModal from "../../commonComponents/LoginModal";
 import UserDetailsModal from "../../commonComponents/UserDetailsModal";
 import { TailSpin } from "react-loader-spinner";
 
-function MyGames() {
+function RegisteredGames() {
   // Context object to get the username of the logged in person who registered game
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
 
@@ -18,29 +18,15 @@ function MyGames() {
 
   // store all players registered for game here
   const [userDetails, setUserDetails] = useState({});
-  const [indivPlayerModal, setIndivPlayerModal] = useState(false);
 
   let param = useParams();
   // first render to get all user organised games
   async function getData() {
     const response = await AxiosInstance.get(
-      `mygames/${param.username}`
+      `registeredgames/${param.username}`
     ).then((res) => {
       setGamesData(res.data);
     });
-  }
-
-  // get request for user games upon clicking details
-  async function getUserDetails(e) {
-    const params = new URLSearchParams([["username", e.target.value]]);
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.get(`mygames/${param.username}`, {
-      params,
-    }).then((res) => {
-      console.log(res.data[0], "data0");
-      setUserDetails(res.data[0]);
-    });
-    setLoggedIn({ ...loggedIn, isLoading: false });
   }
   useEffect(() => {
     setLoggedIn({ ...loggedIn, isLoading: true });
@@ -48,27 +34,24 @@ function MyGames() {
     setLoggedIn({ ...loggedIn, isLoading: false });
   }, []);
 
-  // get player details function
-  function handlePlayerDetails(e) {
-    getUserDetails(e);
-    setIndivPlayerModal(true);
-  }
-  // axios request to update db
-  async function deleteGame(id) {
-    const response = await AxiosInstance.delete("/mygames", {
-      data: { gameID: id },
-    }).then((res) => {
-      // console.log(res, "response");
-    });
-  }
-  // function to delete game from MyGames
-  function handleDeleteGame(e) {
+  // axios request to remove user
+  async function removeUser(data) {
+    const filterList = data.split(",");
+    const userId = filterList[0];
+    const gameId = filterList[1];
+    // isLoading value for loader spinner
     setLoggedIn({ ...loggedIn, isLoading: true });
-    deleteGame(e.target.value);
+    const response = await AxiosInstance.delete("/games", {
+      // data here is the value of button passed as an array
+      data: { gameId: gameId, userId: userId },
+    });
     setLoggedIn({ ...loggedIn, isLoading: false });
+  }
+  // allow individual user to remove themselves
+  function handleRemoveUser(e) {
+    removeUser(e.target.value);
     window.location.reload();
   }
-  console.log(userDetails, "userdetails");
   return (
     <>
       {loggedIn.isLoading ? (
@@ -78,16 +61,7 @@ function MyGames() {
       ) : (
         <>
           <LoginModal show={!loggedIn.login} />
-          <UserDetailsModal
-            show={indivPlayerModal}
-            handleClose={() => {
-              setIndivPlayerModal(false);
-            }}
-            username={userDetails.username}
-            telegramHandle={userDetails.telegramHandle}
-            email={userDetails.email}
-            phoneNumber={userDetails.hp}
-          />
+
           <div className={styles.MainDiv}>
             <div className={styles.GamesCard}>
               <Outlet />
@@ -106,9 +80,9 @@ function MyGames() {
                         id={val._id}
                         name={val.orgName}
                         key={key}
-                        MyGame={true}
-                        handlePlayerDetails={handlePlayerDetails}
-                        handleDeleteGame={handleDeleteGame}
+                        registeredVariant="success"
+                        registeredButtonText="Registered!"
+                        handleRemoveUser={handleRemoveUser}
                       />
                     </div>
                   );
@@ -124,4 +98,4 @@ function MyGames() {
   );
 }
 
-export default MyGames;
+export default RegisteredGames;

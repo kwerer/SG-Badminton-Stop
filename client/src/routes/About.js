@@ -28,8 +28,8 @@ function About() {
           </ol>
           <div>
             For any enquries please email:{" "}
-            <a href="mailto:realworkingjo@email.com">
-              realworkingjo@gmail.com
+            <a href="mailto:badstophelp@email.com">
+              badstophelp@gmail.com
             </a>
           </div>
         </div>

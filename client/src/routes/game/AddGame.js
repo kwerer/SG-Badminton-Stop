@@ -50,6 +50,16 @@ function AddGame() {
   const [numPlayers, setNumPlayers] = useState(1);
   const [venue, setVenue] = useState("");
 
+  // axios post request to send email
+  async function confirmationEmail(to, subject, text) {
+    const userData = {
+      to: to,
+      subject: subject,
+      text: text,
+    };
+    const response = await AxiosInstance.post("/mail", userData);
+    console.log(response, "confirmationemailresponse");
+  }
   // axios post request
   async function postGames() {
     // object add game to games collection
@@ -75,6 +85,7 @@ function AddGame() {
       // gets the username of the user that is currently loggedIn
       orgName: loggedIn.username,
       players: [],
+      startTimeInMs: startDate,
     };
     // post games to
     setLoggedIn({ ...loggedIn, isLoading: true });
@@ -82,7 +93,16 @@ function AddGame() {
       `${process.env.REACT_APP_BASE_URL}/games/new`,
       addedGame
     );
-    setLoggedIn({ ...loggedIn, isLoading: false });
+    if (response.data.isDone) {
+      setLoggedIn({ ...loggedIn, isLoading: false });
+      // function to send email
+      confirmationEmail(
+        loggedIn.email,
+        "Game Successfully added!",
+        loggedIn.username
+      );
+    }
+
     // console.log(addedGame, "addedGame");
   }
 
@@ -117,6 +137,7 @@ function AddGame() {
             <FormRow
               label="Fees"
               feedback="Looks Good!"
+              placeholder="$12"
               negativeFeedback="Please provide a valid fee."
               onChangeFunction={(e) => {
                 setFees(e.target.value);
