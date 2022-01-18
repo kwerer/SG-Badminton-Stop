@@ -4,10 +4,10 @@ const router = express.Router();
 
 const transporter = nodemailer.createTransport({
   port: 465, // true for 465, false for other ports
-  host: "smtp.gmail.com",
+  host: process.env.HOST,
   auth: {
-    user: "badstophelp@gmail.com",
-    pass: "crazybugman123",
+    user: process.env.USER,
+    pass: process.env.PASS,
   },
   secure: true,
 });
