@@ -55,7 +55,7 @@ function Register() {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [validated, setValidated] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+
   // get the url from where the user was from
   const navigate = useNavigate();
   const handleSubmit = (event) => {

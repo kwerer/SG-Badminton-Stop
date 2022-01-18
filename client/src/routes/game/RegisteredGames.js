@@ -67,6 +67,7 @@ function RegisteredGames() {
               <Outlet />
               {gamesData.length !== 0 ? (
                 gamesData.map((val, key) => {
+                  console.log(val, "val");
                   return (
                     <div className={styles.GameCardIndivDiv} key={key}>
                       <GameCard
@@ -79,6 +80,7 @@ function RegisteredGames() {
                         fees={val.fees}
                         id={val._id}
                         name={val.orgName}
+                        NumPlayers={val.numOfPlayers}
                         key={key}
                         registeredVariant="success"
                         registeredButtonText="Registered!"

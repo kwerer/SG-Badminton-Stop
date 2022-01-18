@@ -21,7 +21,7 @@ function AddGame() {
   // states, function for user form
   const [onHideModal, setOnHideModal] = useState(false);
   const [validated, setValidated] = useState(false);
-  const [showAlert, setShowAlert] = useState(true);
+
   const handleSubmit = (e) => {
     const form = e.currentTarget;
 
@@ -43,7 +43,6 @@ function AddGame() {
   // states for user data
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [name, setName] = useState("");
   const [levelOfPlay, setLevelOfPlay] = useState("Beginner");
   const [formatOfPlay, setFormatOfPlay] = useState("Doubles");
   const [fees, setFees] = useState(0);
@@ -204,7 +203,6 @@ function AddGame() {
             </Row>
           </Form>
           <SubmitModal
-            onHide={onHideModal}
             show={onHideModal}
             onHide={() => {
               setOnHideModal(false);
