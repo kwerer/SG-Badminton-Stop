@@ -64,6 +64,7 @@ app.use("/mygames", mygames);
 app.use("/registeredgames", registeredgames);
 app.use("/mail", mail);
 
-app.listen(3001, () => {
-  console.log("server started on port 3001");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`server started on port ${PORT}`);
 });
