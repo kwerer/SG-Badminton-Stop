@@ -1,0 +1,27 @@
+{
+  "name": "sgbadmintonstop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./backend/index.js",
+  "dependencies": {
+    "nodemailer": "^6.7.2",
+    "react-icons": "^4.3.1",
+    "react-loader-spinner": "^5.0.8",
+    "react-bootstrap-icons": "^1.7.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwerer/Sg-Badminton-Stop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kwerer/Sg-Badminton-Stop/issues"
+  },
+  "homepage": "https://github.com/kwerer/Sg-Badminton-Stop#readme"
+}
