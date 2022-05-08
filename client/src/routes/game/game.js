@@ -8,6 +8,20 @@ import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
 import { Button } from "react-bootstrap";
 import { TailSpin } from "react-loader-spinner";
+import { fstore } from "../../firebase-config.js";
+import {
+  collection,
+  query,
+  where,
+  updateDoc,
+  deleteDoc,
+  doc,
+  Timestamp,
+  onSnapshot,
+  QuerySnapshot,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 
 export default function Home() {
   // Context object to check if user is logged in
@@ -24,37 +38,35 @@ export default function Home() {
   const [gamesData, setGamesData] = useState([]);
 
   // get game cards
-  async function getData() {
-    const response = await AxiosInstance.get("/games").then((res) => {
-      const data = res.data.reverse();
+  function getData() {
+    // get reference to today's date to query for games that are not over
+    let timestamp = new Date();
+    // ref to firestore
+    const gamesCollectionRef = query(
+      collection(fstore, "userGames"),
+      where("startTime", ">", timestamp)
+    );
 
-      setGamesData(data);
-    });
+    // livesnapshot
+    const userGamesData = onSnapshot(
+      gamesCollectionRef,
+      (QuerySnapshot) => {
+        // reset gamesData before pushing new data in from the query
+        setGamesData([]);
+        QuerySnapshot.forEach((doc) => {
+          let docData = doc.data();
+          docData.id = doc.id;
+          setGamesData((gamesData) => [...gamesData, docData]);
+        });
+      }
+    );
   }
+  console.log(gamesData, "gamesData");
   useEffect(() => {
+    setLoggedIn({ ...loggedIn, isLoading: true });
     getData();
+    setLoggedIn({ ...loggedIn, isLoading: false });
   }, []);
-
-  // function to update data in mongodb game data document (add user)
-  async function registerUserUpdate(ID) {
-    console.log(ID, "registeruserupdate");
-    const registerData = {
-      username: loggedIn.username,
-      gameID: ID,
-    };
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.post("/games", registerData);
-    setLoggedIn({ ...loggedIn, isLoading: false });
-  }
-
-  // function to update data in mongodb game data document (remove user)
-  async function removeUserUpdate(ID) {
-    const removeData = { username: loggedIn.username, gameID: ID };
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.post("/games", removeData);
-
-    setLoggedIn({ ...loggedIn, isLoading: false });
-  }
 
   // confirmation email for registering user
   async function registerUserConfirmationEmail() {
@@ -67,42 +79,23 @@ export default function Home() {
   }
 
   // register loggedin user for game
-  function handleRegister(e) {
-    if (loggedIn.login) {
-      console.log("logged in and register");
-      registerUserUpdate(e.target.value);
-      setRegisterModalOpen(false);
-      // function to send email to confirm registered user
-      registerUserConfirmationEmail();
-      window.location.reload();
-    } else {
-      // modal to ask user to login
-      setModalOpen(true);
-    }
+  async function handleRegister(e) {
+    // append players to register each player into array
+    const gameRef = doc(fstore, "userGames", e.target.value);
+    await updateDoc(gameRef, { players: arrayUnion(loggedIn.username) });
   }
 
   // edit game
   function handleEditGame() {
     navigate(`/mygames/${loggedIn.username}`);
   }
-  // axios request to remove user
-  async function removeUser(data) {
-    const filterList = data.split(",");
-    const userId = filterList[0];
-    const gameId = filterList[1];
-    // isLoading value for loader spinner
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.delete("/games", {
-      // data here is the value of button passed as an array
-      data: { gameId: gameId, userId: userId },
-    });
-    setLoggedIn({ ...loggedIn, isLoading: false });
+  // remove user from game
+  async function handleRemoveUser(e) {
+    // remove player from player array
+    const gameRef = doc(fstore, "userGames", e.target.value);
+    await updateDoc(gameRef, { players: arrayRemove(loggedIn.username) });
   }
-  // allow individual user to remove themselves
-  function handleRemoveUser(e) {
-    removeUser(e.target.value);
-    window.location.reload();
-  }
+
   return (
     <>
       {loggedIn.isLoading ? (
@@ -133,18 +126,24 @@ export default function Home() {
               <Outlet />
               {gamesData.length !== 0 ? (
                 gamesData.map((val, key) => {
+                  const timing = `${val.startTime
+                    .toDate()
+                    .toLocaleTimeString()}-${val.endTime
+                    .toDate()
+                    .toLocaleTimeString()}`;
+
                   return (
                     <>
                       <div className={styles.GameCardIndivDiv} key={key}>
                         <GameCard
                           title={val.venue}
-                          date={val.date}
+                          date={val.startTime.toDate().toDateString()}
                           players={val.players}
-                          time={val.time}
+                          time={timing}
                           level={val.levelOfPlay}
                           format={val.formatOfPlay}
                           fees={val.fees}
-                          id={val._id}
+                          id={val.id}
                           name={val.orgName}
                           key={key}
                           NumPlayers={val.numOfPlayers}
@@ -163,7 +162,17 @@ export default function Home() {
                   );
                 })
               ) : (
-                <div>No Games Currently!</div>
+                <>
+                  {gamesData == null ? (
+                    <div>No Games Currently!</div>
+                  ) : (
+                    <div
+                      className={`loading-center-spinner ${styles.TailCenterSpinDiv}`}
+                    >
+                      <TailSpin color="#00BFFF" />
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

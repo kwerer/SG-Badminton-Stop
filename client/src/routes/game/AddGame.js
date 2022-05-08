@@ -13,6 +13,16 @@ import SubmitModal from "../../commonComponents/SubmitModal";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
 import { TailSpin } from "react-loader-spinner";
+import { fstore } from "../../firebase-config.js";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  Timestamp,
+} from "firebase/firestore";
 
 function AddGame() {
   // Context object to get the username of the logged in person who registered game
@@ -22,24 +32,35 @@ function AddGame() {
   const [onHideModal, setOnHideModal] = useState(false);
   const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     const form = e.currentTarget;
 
     e.preventDefault();
     e.stopPropagation();
-    if (form.checkValidity)
-      if (form.checkValidity() === false) {
-        // if there are wrong fields
-      } else {
-        // alert/modal for confirmation
-        setOnHideModal(true);
-      }
+    console.log(form.checkValidity(), "form");
+    if (form.checkValidity()) {
+      setOnHideModal(true);
+      setValidated(true);
+    }
 
-    // false if form is submitted
-    // true if form is not submitted
-    setValidated(true);
-  };
-
+    // user games details
+    const addedGame = {
+      numOfPlayers: numPlayers,
+      startTime: Timestamp.fromDate(new Date(startDate)),
+      endTime: Timestamp.fromDate(new Date(endDate)),
+      levelOfPlay: levelOfPlay,
+      formatOfPlay: formatOfPlay,
+      fees: fees,
+      venue: venue,
+      // gets the username of the user that is currently loggedIn
+      orgName: loggedIn.username,
+      players: [],
+    };
+    // submit user game details
+    // users collection from firestore
+    const gamesCollectionRef = collection(fstore, "userGames");
+    await addDoc(gamesCollectionRef, addedGame);
+  }
   // states for user data
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -49,62 +70,6 @@ function AddGame() {
   const [numPlayers, setNumPlayers] = useState(1);
   const [venue, setVenue] = useState("");
 
-  // axios post request to send email
-  async function confirmationEmail(to, subject, text) {
-    const userData = {
-      to: to,
-      subject: subject,
-      text: text,
-    };
-    const response = await AxiosInstance.post("/mail", userData);
-    console.log(response, "confirmationemailresponse");
-  }
-  // axios post request
-  async function postGames() {
-    // object add game to games collection
-    const addedGame = {
-      numOfPlayers: numPlayers,
-      time: `${
-        startDate.getHours() < 10 ? "0" : ""
-      }${startDate.getHours()}${
-        startDate.getMinutes() < 10 ? "0" : ""
-      }${startDate.getMinutes()} 
-       -
-        ${endDate.getHours() < 10 ? "0" : ""}${endDate.getHours()}${
-        endDate.getMinutes() < 10 ? "0" : ""
-      }${endDate.getMinutes()}
-      `,
-      levelOfPlay: levelOfPlay,
-      formatOfPlay: formatOfPlay,
-      fees: fees,
-      venue: venue,
-      date: `${startDate.getDate()}-${
-        startDate.getMonth() + 1
-      }-${startDate.getFullYear()}`,
-      // gets the username of the user that is currently loggedIn
-      orgName: loggedIn.username,
-      players: [],
-      startTimeInMs: startDate,
-    };
-    // post games to
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.post(
-      `${process.env.REACT_APP_BASE_URL}/games/new`,
-      addedGame
-    );
-    if (response.data.isDone) {
-      setLoggedIn({ ...loggedIn, isLoading: false });
-      // function to send email
-      confirmationEmail(
-        loggedIn.email,
-        "Game Successfully added!",
-        loggedIn.username
-      );
-    }
-
-    // console.log(addedGame, "addedGame");
-  }
-
   // constant options
   const levelOfPlayList = [
     "Beginner",
@@ -112,11 +77,12 @@ function AddGame() {
     "Low Intermediate",
     "Intermediate",
     "Advanced",
+    "Professional",
   ];
 
   const formatOfPlayList = ["Doubles", "Singles", "Singles & Doubles"];
   // change when can more than 5 people
-  const numPlayersList = [1, 2, 3, 4, 5];
+  const numPlayersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
     <>
@@ -134,9 +100,9 @@ function AddGame() {
               }}
             />
             <FormRow
-              label="Fees"
+              label="Fees ($)"
               feedback="Looks Good!"
-              placeholder="$12"
+              placeholder="12"
               negativeFeedback="Please provide a valid fee."
               onChangeFunction={(e) => {
                 setFees(e.target.value);
@@ -193,9 +159,7 @@ function AddGame() {
             </Row>
             <Row className={`mb-3 ${styles.FormRowGroup}`}>
               <Col md="8">
-                <Button type="submit" onClick={postGames}>
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
                 {loggedIn.isLoading ? (
                   <TailSpin color="#00BFFF" height={80} width={80} />
                 ) : null}

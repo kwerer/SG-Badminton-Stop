@@ -30,6 +30,7 @@ function GameCard(props) {
     handlePlayerDetails,
     handleDeleteGame,
     handleRemoveUser,
+    handleRemovePlayer,
   } = props;
   // Use context object to check if user is logged in or not
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
@@ -88,7 +89,7 @@ function GameCard(props) {
                         <span>
                           <Button
                             onClick={(e) => handleRemoveUser(e)}
-                            value={[player, id]}
+                            value={id}
                             className={styles.RemoveUserButton}
                           >
                             Remove
@@ -103,6 +104,13 @@ function GameCard(props) {
                             onClick={handlePlayerDetails}
                           >
                             Details
+                          </Button>
+                          <Button
+                            variant="danger"
+                            value={[id, player]}
+                            onClick={handleRemovePlayer}
+                          >
+                            Remove
                           </Button>
                         </span>
                       ) : null}

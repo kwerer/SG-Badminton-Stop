@@ -4,80 +4,108 @@ import AxiosInstance from "../../commonComponents/AxiosInstance.js";
 import { Button, Form } from "react-bootstrap";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
+import { fstore } from "../../firebase-config.js";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 function Login() {
   // Set object to be true and username
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
   // get the url from where the user was from
   const navigate = useNavigate();
+
+  // get auth from firebase
+  const auth = getAuth();
   // function to authenticate existing user
   async function loginUser() {
-    const addedUser = {
-      username: userName,
-      email: email,
-      password: password1,
-    };
-    const promise = AxiosInstance.post(
-      `${process.env.REACT_APP_BASE_URL}/login`,
-      addedUser
-    );
+    console.log("user login");
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        const userUid = user.uid;
+        console.log(user, "user in login");
 
-    const dataPromise = await promise.then((res) => {
-      console.log(res.data, "res.data");
-      sessionStorage.setItem("login", true);
-      sessionStorage.setItem("username", res.data.username);
-      sessionStorage.setItem("email", res.data.email);
+        // set username from firebase
+        const q = query(
+          collection(fstore, "userAccounts"),
+          where("email", "==", email)
+        );
+        const userData = await getDocs(q);
 
-      return res.data;
-    });
+        // set localStorage to persist logged in status between refreshes
+        localStorage.setItem("login", true);
+        localStorage.setItem("email", email);
+        localStorage.setItem("username", userData.docs[0].data().name);
 
-    if (dataPromise) {
-      navigate("/games");
-      setLoggedIn({
-        ...loggedIn,
-        login: true,
-        username: dataPromise.username,
-        email: dataPromise.email,
+        // set login context to render details
+        setLoggedIn({
+          ...loggedIn,
+          login: true,
+          username: userData.docs[0].data().name,
+          email: email,
+        });
+
+        // bring user to main page
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(error, "errorcode from login");
+        let formatError = errorCode
+          .substring(5, errorCode.length)
+          .split("-")
+          .join(" ");
+
+        setErrorCode(formatError);
+
+        // alert user about the error
+        alert(formatError);
       });
-    } else {
-      alert("Wrong login credentials");
-    }
   }
+  console.log(localStorage, "localStorage");
+  console.log(loggedIn, "loggedIn from login");
+
   // form component
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [password1, setPassword1] = useState("");
-  const [password2, setPassword2] = useState("");
-
+  const [password, setPassword] = useState("");
   const [validated, setValidated] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
 
   const handleSubmit = (event) => {
-    // need to check backend for
-    // 1. username is taken
-    // 2. email is taken
     event.preventDefault();
     event.stopPropagation();
-    // need to check user password is the same
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-    } else {
-      loginUser();
-    }
+
+    loginUser();
 
     setValidated(true);
   };
+
+  console.log(auth.currentUser, "authokkk");
   return (
     <div className={styles.RegisterLoginMain}>
       <div className={styles.RegisterLoginForm}>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group controlId="validationCustom01">
-            <Form.Label>Username</Form.Label>
+            <Form.Label>Email</Form.Label>
             <Form.Control
               required
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               onChange={(e) => {
-                setUserName(e.target.value);
+                setEmail(e.target.value);
               }}
             />
 
@@ -90,10 +118,10 @@ function Login() {
             <Form.Label>Password</Form.Label>
             <Form.Control
               required
-              type="text"
+              type="password"
               placeholder="Password"
               onChange={(e) => {
-                setPassword1(e.target.value);
+                setPassword(e.target.value);
               }}
             />
           </Form.Group>

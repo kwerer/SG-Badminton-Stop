@@ -15,6 +15,7 @@ import Logo from "../Images/Rectangle-logo-without-bg.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import LogoutModal from "./LogoutModal";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function Header() {
   // user context for login check
@@ -27,13 +28,14 @@ export default function Header() {
   function handleCloseLogoutModal() {
     setLoggedOutModal(false);
   }
+  const auth = getAuth();
   // function to clear login details
   function handleLogOut() {
-    sessionStorage.clear();
-    setLoggedIn({ loggedIn: false, username: "" });
+    signOut(auth);
+    localStorage.clear();
+    setLoggedIn({ login: false, username: "", email: "" });
     setLoggedOutModal(true);
     navigate("/games");
-    // create modal here to log out user
   }
 
   const NavLinks = [
@@ -48,6 +50,7 @@ export default function Header() {
       disabled: false,
     },
   ];
+  console.log(loggedIn, "loggedIn from header");
   return (
     <>
       <LogoutModal

@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
-import Game from "./routes/game/Game";
-import Header from "./commonComponents/Header";
+import Game from "./routes/game/Game.js";
+import Header from "./commonComponents/Header.js";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Error from "./routes/Error";
 import "bootstrap/dist/css/bootstrap.min.css";
-import AddGame from "./routes/game/AddGame";
-import Login from "./routes/userAccount/Login";
-import Register from "./routes/userAccount/Register";
+import AddGame from "./routes/game/AddGame.js";
+import Login from "./routes/userAccount/Login.js";
+import Register from "./routes/userAccount/Register.js";
 import "./App.css";
-import About from "./routes/About";
-import { LoginContext } from "./commonComponents/Context";
-import UserGames from "./routes/game/MyGames";
-import RegisteredGames from "./routes/game/RegisteredGames";
+import About from "./routes/About.js";
+import { LoginContext } from "./commonComponents/Context.js";
+import UserGames from "./routes/game/MyGames.js";
+import RegisteredGames from "./routes/game/RegisteredGames.js";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { getAuth } from "firebase/auth";
 
 function App() {
+  const auth = getAuth();
   const [loggedIn, setLoggedIn] = useState({
-    login: false,
-    username: "",
+    login: auth.currentUser !== null ? true : false,
+    username: localStorage.getItem("username"),
     isLoading: false,
-    email: "",
+    email: auth.currentUser !== null ? auth.currentUser.email : "",
   });
   console.log(loggedIn, "usercontext");
+  console.log(localStorage, "localStorage");
 
   useEffect(() => {
-    if (sessionStorage.getItem("login")) {
+    if (localStorage.getItem("login")) {
       setLoggedIn({
         ...loggedIn,
-        login: sessionStorage.getItem("login"),
-        username: sessionStorage.getItem("username"),
-        email: sessionStorage.getItem("email"),
+        login: localStorage.getItem("login"),
+        username: localStorage.getItem("username"),
+        email: localStorage.getItem("email"),
       });
     }
   }, []);

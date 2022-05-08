@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import styles from "./styles.module.css";
 
 function UserDetailsModal(props) {
   const {
@@ -17,10 +18,19 @@ function UserDetailsModal(props) {
       </Modal.Header>
       <Modal.Body>
         <ListGroup>
-          <ListGroupItem>Username: {username}</ListGroupItem>
-          <ListGroupItem>Telegram Handle: {telegramHandle}</ListGroupItem>
-          <ListGroupItem>Email: {email}</ListGroupItem>
-          <ListGroupItem>HP: {phoneNumber}</ListGroupItem>
+          <ListGroupItem>
+            Username: <span className={styles.Italics}>{username}</span>
+          </ListGroupItem>
+          <ListGroupItem>
+            Telegram Handle:{" "}
+            <span className={styles.Italics}>{telegramHandle}</span>
+          </ListGroupItem>
+          <ListGroupItem>
+            Email: <span className={styles.Italics}>{email}</span>
+          </ListGroupItem>
+          <ListGroupItem>
+            HP: <span className={styles.Italics}>{phoneNumber}</span>
+          </ListGroupItem>
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>

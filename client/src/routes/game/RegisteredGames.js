@@ -8,6 +8,24 @@ import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
 import UserDetailsModal from "../../commonComponents/UserDetailsModal";
 import { TailSpin } from "react-loader-spinner";
+import { fstore } from "../../firebase-config.js";
+
+import {
+  collection,
+  query,
+  where,
+  updateDoc,
+  deleteDoc,
+  doc,
+  Timestamp,
+  onSnapshot,
+  QuerySnapshot,
+  arrayUnion,
+  arrayRemove,
+  orderBy,
+  getDoc,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 function RegisteredGames() {
   // Context object to get the username of the logged in person who registered game
@@ -22,10 +40,28 @@ function RegisteredGames() {
   let param = useParams();
   // first render to get all user organised games
   async function getData() {
-    const response = await AxiosInstance.get(
-      `registeredgames/${param.username}`
-    ).then((res) => {
-      setGamesData(res.data);
+    // get reference to today's date to query for games that are not over
+    let timestamp = new Date();
+    // ref to firestore - 2 queries to get only the user's data + games not over
+    const gamesCollectionRef = query(
+      collection(fstore, "userGames"),
+      where("players", "array-contains", loggedIn.username)
+    );
+
+    const gamesCollectionRef2 = query(
+      gamesCollectionRef,
+      where("startTime", ">=", timestamp)
+    );
+
+    // livesnapshot
+    onSnapshot(gamesCollectionRef2, (QuerySnapshot) => {
+      // reset gamesData before pushing new data in from the query
+      setGamesData([]);
+      QuerySnapshot.forEach((doc) => {
+        let docData = doc.data();
+        docData.id = doc.id;
+        setGamesData((gamesData) => [...gamesData, docData]);
+      });
     });
   }
   useEffect(() => {
@@ -34,23 +70,12 @@ function RegisteredGames() {
     setLoggedIn({ ...loggedIn, isLoading: false });
   }, []);
 
-  // axios request to remove user
-  async function removeUser(data) {
-    const filterList = data.split(",");
-    const userId = filterList[0];
-    const gameId = filterList[1];
-    // isLoading value for loader spinner
-    setLoggedIn({ ...loggedIn, isLoading: true });
-    const response = await AxiosInstance.delete("/games", {
-      // data here is the value of button passed as an array
-      data: { gameId: gameId, userId: userId },
-    });
-    setLoggedIn({ ...loggedIn, isLoading: false });
-  }
   // allow individual user to remove themselves
-  function handleRemoveUser(e) {
-    removeUser(e.target.value);
-    window.location.reload();
+  async function handleRemoveUser(e) {
+    // remove player from player array
+    console.log(e.target.value, "target value from registered games");
+    const gameRef = doc(fstore, "userGames", e.target.value);
+    await updateDoc(gameRef, { players: arrayRemove(loggedIn.username) });
   }
   return (
     <>
@@ -78,7 +103,7 @@ function RegisteredGames() {
                         level={val.levelOfPlay}
                         format={val.formatOfPlay}
                         fees={val.fees}
-                        id={val._id}
+                        id={val.id}
                         name={val.orgName}
                         NumPlayers={val.numOfPlayers}
                         key={key}

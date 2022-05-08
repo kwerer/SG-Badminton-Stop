@@ -28,7 +28,7 @@ function About() {
           </ol>
           <div>
             For any enquries please email:{" "}
-            <a href="mailto:badstophelp@email.com">
+            <a href="mailto:badstophelp@gmail.com">
               badstophelp@gmail.com
             </a>
           </div>
