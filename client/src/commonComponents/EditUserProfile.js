@@ -2,8 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { LoginContext } from "./Context";
 import { Modal, Button, InputGroup, FormControl } from "react-bootstrap";
 import { fstore } from "../firebase-config";
-import { Link } from "react-router-dom";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { getAuth, updatePassword } from "firebase/auth";
 import * as Icon from "react-bootstrap-icons";
 import styles from "./styles.module.css";
@@ -22,26 +28,49 @@ function EditUserProfile(props) {
   const [editPasswordText, setEditPasswordText] = useState("??????");
 
   // function to change username
-  function handleChangeUsername() {
+  async function handleChangeUsername() {
     setEditUsername(true);
   }
-  // function to save username
+  // function to save username - function not in use
   async function handleSaveUsername() {
     const userDetailsDocRef = doc(fstore, "userAccounts", user.uid);
-    // update firebase
-    await updateDoc(userDetailsDocRef, {
-      name: editUsernameText,
+    const userGamesDocRef = collection(fstore, "userGames");
+    const checkUsernameInArray = query(
+      userAccountsRef,
+      where("players", "array-contains", `${editUsernameText}`)
+    );
+    const getCheckArrayUsername = await getDocs(checkUsernameInArray);
+    getCheckArrayUsername.forEach((doc) => {
+      console.log(doc.data(), "data");
     });
 
-    // update local storage
-    localStorage.setItem("username", editUsernameText);
-    // update user context
-    setLoggedIn({
-      ...loggedIn,
-      username: editUsernameText,
-    });
-    alert("Username Updated!");
-    setEditUsername(false);
+    // check if username is taken
+    const userAccountsRef = collection(fstore, "userAccounts");
+    const checkUsername = query(
+      userAccountsRef,
+      where("name", "==", `${editUsernameText}`)
+    );
+    const getCheck = await getDocs(checkUsername);
+    // array that contains this username is empty
+    if (getCheck.empty) {
+      // update name in userAccounts
+      await updateDoc(userDetailsDocRef, {
+        name: editUsernameText,
+      });
+
+      // update local storage
+      localStorage.setItem("username", editUsernameText);
+      // update user context
+      setLoggedIn({
+        ...loggedIn,
+        username: editUsernameText,
+      });
+
+      alert("Username Updated!");
+      setEditUsername(false);
+    } else {
+      alert("Username is taken, please choose another username");
+    }
   }
 
   // function to change password
@@ -97,11 +126,19 @@ function EditUserProfile(props) {
           </span>
           <span>
             {editUsername ? (
-              <Button variant="success" onClick={handleSaveUsername}>
+              <Button
+                disabled
+                variant="success"
+                onClick={handleSaveUsername}
+              >
                 <Icon.Check /> Save
               </Button>
             ) : (
-              <Button variant="warning" onClick={handleChangeUsername}>
+              <Button
+                disabled
+                variant="warning"
+                onClick={handleChangeUsername}
+              >
                 <Icon.PencilFill /> Edit
               </Button>
             )}
@@ -135,7 +172,7 @@ function EditUserProfile(props) {
               </Button>
             ) : (
               <Button variant="warning" onClick={handleChangePassword}>
-                <Icon.PencilFill /> Edit
+                <Icon.PencilFill /> Change Password
               </Button>
             )}
           </span>

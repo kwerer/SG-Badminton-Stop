@@ -14,11 +14,8 @@ import {
   query,
   where,
   updateDoc,
-  deleteDoc,
   doc,
-  Timestamp,
   onSnapshot,
-  QuerySnapshot,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
@@ -78,7 +75,7 @@ export default function Home() {
 
   // register loggedin user for game
   async function handleRegister(e) {
-    if (loggedIn.login == false) {
+    if (loggedIn.login === false) {
       setModalOpen(true);
       return null;
     }
