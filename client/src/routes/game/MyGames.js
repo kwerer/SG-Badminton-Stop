@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 // import context object
 import { LoginContext } from "../../commonComponents/Context";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, Link } from "react-router-dom";
 import GameCard from "../../commonComponents/GameCard";
 import styles from "./styles.module.css";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
@@ -9,7 +9,7 @@ import LoginModal from "../../commonComponents/LoginModal";
 import UserDetailsModal from "../../commonComponents/UserDetailsModal";
 import { TailSpin } from "react-loader-spinner";
 import { fstore } from "../../firebase-config.js";
-
+import { Button } from "react-bootstrap";
 import {
   collection,
   query,
@@ -167,9 +167,21 @@ function MyGames() {
                   );
                 })
               ) : (
-                <div className={styles.TailCenterSpinDiv}>
-                  Start adding games
-                </div>
+                <>
+                  <div className={styles.TailCenterSpinDiv}>
+                    Start adding games
+                  </div>
+                  <div>
+                    <Button
+                      as={Link}
+                      to="/games/new"
+                      variant="primary"
+                      className={styles.AddGamesButton}
+                    >
+                      Add Games!
+                    </Button>
+                  </div>
+                </>
               )}
             </div>
           </div>

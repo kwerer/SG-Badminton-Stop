@@ -31,7 +31,6 @@ function Register() {
   const [errorCode, setErrorCode] = useState(null);
   // store users into fstore
   // users collection from firestore
-  const usersCollectionRef = collection(fstore, "userAccounts");
   async function createUser() {
     await setDoc(doc(fstore, "userAccounts", auth.currentUser.uid), {
       name: userName,

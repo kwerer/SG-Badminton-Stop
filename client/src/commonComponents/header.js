@@ -15,6 +15,7 @@ import Logo from "../Images/Rectangle-logo-without-bg.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import LogoutModal from "./LogoutModal";
+import EditUserProfile from "./EditUserProfile";
 import { getAuth, signOut } from "firebase/auth";
 
 export default function Header() {
@@ -24,9 +25,15 @@ export default function Header() {
   const navigate = useNavigate();
   // logout modal state
   const [loggedOutModal, setLoggedOutModal] = useState(false);
+  // user profile modal
+  const [userProfileModal, setUserProfileModal] = useState(false);
   // function to close logout modal
   function handleCloseLogoutModal() {
     setLoggedOutModal(false);
+  }
+  // function to close user profile modal
+  function handleCloseUserProfileModal() {
+    setUserProfileModal(false);
   }
   const auth = getAuth();
   // function to clear login details
@@ -50,12 +57,19 @@ export default function Header() {
       disabled: false,
     },
   ];
-  console.log(loggedIn, "loggedIn from header");
+
+  function handleEditProfile() {
+    setUserProfileModal(true);
+  }
   return (
     <>
       <LogoutModal
         handleClose={handleCloseLogoutModal}
         show={loggedOutModal}
+      />
+      <EditUserProfile
+        handleClose={handleCloseUserProfileModal}
+        show={userProfileModal}
       />
       <Navbar bg="light" variant="light" expand="lg">
         <Container fluid>
@@ -96,6 +110,9 @@ export default function Header() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
+                      <Dropdown.Item onClick={handleEditProfile}>
+                        My Profile
+                      </Dropdown.Item>
                       <Dropdown.Item
                         as={Link}
                         to={`mygames/${loggedIn.username}`}

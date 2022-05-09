@@ -44,7 +44,7 @@ export default function Home() {
     // ref to firestore
     const gamesCollectionRef = query(
       collection(fstore, "userGames"),
-      where("startTime", ">", timestamp)
+      where("startTime", ">=", timestamp)
     );
 
     // livesnapshot
@@ -78,6 +78,10 @@ export default function Home() {
 
   // register loggedin user for game
   async function handleRegister(e) {
+    if (loggedIn.login == false) {
+      setModalOpen(true);
+      return null;
+    }
     // append players to register each player into array
     const gameRef = doc(fstore, "userGames", e.target.value);
     await updateDoc(gameRef, { players: arrayUnion(loggedIn.username) });

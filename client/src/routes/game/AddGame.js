@@ -40,14 +40,22 @@ function AddGame() {
   const [validated, setValidated] = useState(false);
 
   async function handleSubmit(e) {
-    const form = e.currentTarget;
-
     e.preventDefault();
     e.stopPropagation();
-    console.log(form.checkValidity(), "form");
-    if (form.checkValidity()) {
-      setOnHideModal(true);
-      setValidated(true);
+    const form = e.currentTarget;
+    if (venue === "") {
+      return alert("Venue cannot be left empty");
+    } else if (fees === -1) {
+      return alert("Fees cannot be left empty");
+    } else if (venue.length > 50) {
+      return alert("Venue characters cannot exceed 100");
+    } else if (fees.length > 50) {
+      return alert("Fees characters cannot exceed 100");
+    } else {
+      if (form.checkValidity()) {
+        setOnHideModal(true);
+        setValidated(true);
+      }
     }
 
     // user games details
@@ -69,13 +77,14 @@ function AddGame() {
     const newGame = await addDoc(gamesCollectionRef, addedGame);
     console.log(newGame.id, "newGame");
     uploadImage(newGame.id);
+    setOnHideModal(true);
   }
   // states for user data
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [levelOfPlay, setLevelOfPlay] = useState("Beginner");
   const [formatOfPlay, setFormatOfPlay] = useState("Doubles");
-  const [fees, setFees] = useState(0);
+  const [fees, setFees] = useState(-1);
   const [numPlayers, setNumPlayers] = useState(1);
   const [venue, setVenue] = useState("");
   const [imageUploaded, setImageUploaded] = useState(null);
