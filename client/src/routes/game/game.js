@@ -48,18 +48,16 @@ export default function Home() {
     );
 
     // livesnapshot
-    const userGamesData = onSnapshot(
-      gamesCollectionRef,
-      (QuerySnapshot) => {
-        // reset gamesData before pushing new data in from the query
-        setGamesData([]);
-        QuerySnapshot.forEach((doc) => {
-          let docData = doc.data();
-          docData.id = doc.id;
-          setGamesData((gamesData) => [...gamesData, docData]);
-        });
-      }
-    );
+    onSnapshot(gamesCollectionRef, (QuerySnapshot) => {
+      // reset gamesData before pushing new data in from the query
+      setGamesData([]);
+      QuerySnapshot.forEach((doc) => {
+        let docData = doc.data();
+        console.log(docData, "docData");
+        docData.id = doc.id;
+        setGamesData((gamesData) => [...gamesData, docData]);
+      });
+    });
   }
   console.log(gamesData, "gamesData");
   useEffect(() => {
@@ -146,6 +144,7 @@ export default function Home() {
                           id={val.id}
                           name={val.orgName}
                           key={key}
+                          imageUrl={val.imageUrl}
                           NumPlayers={val.numOfPlayers}
                           buttonFunction={handleRegister}
                           buttonVariant="secondary"

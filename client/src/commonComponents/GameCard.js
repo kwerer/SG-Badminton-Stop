@@ -31,6 +31,7 @@ function GameCard(props) {
     handleDeleteGame,
     handleRemoveUser,
     handleRemovePlayer,
+    imageUrl,
   } = props;
   // Use context object to check if user is logged in or not
   const { loggedIn, setLoggedIn } = useContext(LoginContext);
@@ -48,7 +49,11 @@ function GameCard(props) {
       {/* renders too many modals here  */}
       <LoginModal show={showModal} handleClose={handleClose} />
       <Card style={{ width: "18rem" }} className={styles.MainCard}>
-        <Card.Img variant="top" src={Logo} className={styles.CardImage} />
+        <Card.Img
+          variant="top"
+          src={imageUrl}
+          className={styles.CardImage}
+        />
         <Card.Body>
           <Card.Title>Venue: {title}</Card.Title>
           <Card.Text>

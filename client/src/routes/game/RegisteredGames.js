@@ -104,6 +104,7 @@ function RegisteredGames() {
                         format={val.formatOfPlay}
                         fees={val.fees}
                         id={val.id}
+                        imageUrl={val.imageUrl}
                         name={val.orgName}
                         NumPlayers={val.numOfPlayers}
                         key={key}

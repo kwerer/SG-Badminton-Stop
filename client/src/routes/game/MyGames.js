@@ -143,6 +143,7 @@ function MyGames() {
                     .toLocaleTimeString()}-${val.endTime
                     .toDate()
                     .toLocaleTimeString()}`;
+                  console.log(val.imageUrl, "imageurl");
                   return (
                     <div className={styles.GameCardIndivDiv} key={key}>
                       <GameCard
@@ -156,6 +157,7 @@ function MyGames() {
                         id={val.id}
                         name={val.orgName}
                         key={key}
+                        imageUrl={val.imageUrl}
                         MyGame={true}
                         handlePlayerDetails={handlePlayerDetails}
                         handleDeleteGame={handleDeleteGame}

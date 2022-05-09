@@ -13,7 +13,14 @@ import SubmitModal from "../../commonComponents/SubmitModal";
 import AxiosInstance from "../../commonComponents/AxiosInstance";
 import LoginModal from "../../commonComponents/LoginModal";
 import { TailSpin } from "react-loader-spinner";
-import { fstore } from "../../firebase-config.js";
+import { fstore, storage } from "../../firebase-config.js";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list,
+} from "firebase/storage";
 import {
   collection,
   getDocs,
@@ -59,7 +66,9 @@ function AddGame() {
     // submit user game details
     // users collection from firestore
     const gamesCollectionRef = collection(fstore, "userGames");
-    await addDoc(gamesCollectionRef, addedGame);
+    const newGame = await addDoc(gamesCollectionRef, addedGame);
+    console.log(newGame.id, "newGame");
+    uploadImage(newGame.id);
   }
   // states for user data
   const [startDate, setStartDate] = useState(new Date());
@@ -69,6 +78,31 @@ function AddGame() {
   const [fees, setFees] = useState(0);
   const [numPlayers, setNumPlayers] = useState(1);
   const [venue, setVenue] = useState("");
+  const [imageUploaded, setImageUploaded] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+
+  // upload images -  called in handleSubmit function
+
+  // reference to upload images
+  async function uploadImage(id) {
+    const userGameRef = doc(fstore, "userGames", id);
+    if (imageUploaded == null) {
+      await updateDoc(userGameRef, {
+        // if no image was used, set the image to logo
+        imageUrl:
+          "https://firebasestorage.googleapis.com/v0/b/sgbadmintonstop-7da0c.appspot.com/o/userGameImages%2FVVvov4EGLERVvzdHNAZ8?alt=media&token=aafe904c-66ed-4088-a44b-d38012d6d225",
+      });
+    } else {
+      const imageRef = ref(storage, `userGameImages/${id}`);
+      uploadBytes(imageRef, imageUploaded).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then(async (url) => {
+          await updateDoc(userGameRef, {
+            imageUrl: url,
+          });
+        });
+      });
+    }
+  }
 
   // constant options
   const levelOfPlayList = [
@@ -84,6 +118,7 @@ function AddGame() {
   // change when can more than 5 people
   const numPlayersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+  console.log(imageUploaded, "imageUploaded");
   return (
     <>
       <LoginModal show={!loggedIn.login} />
@@ -156,6 +191,18 @@ function AddGame() {
                   />
                 </div>
               </Form.Group>
+            </Row>
+            <Row className={`mb-3 ${styles.FormRowGroup}`}>
+              <Col md="8">
+                <Form.Label>Game Thumbnail</Form.Label>
+                <Form.Control
+                  type="file"
+                  size="sm"
+                  onChange={(e) => {
+                    setImageUploaded(e.target.files[0]);
+                  }}
+                />
+              </Col>
             </Row>
             <Row className={`mb-3 ${styles.FormRowGroup}`}>
               <Col md="8">
